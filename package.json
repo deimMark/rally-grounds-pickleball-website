@@ -13,11 +13,18 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "db:start": "node scripts/local-supabase.mjs start",
+    "db:reset": "node scripts/local-supabase.mjs reset",
+    "db:configure": "node scripts/local-supabase.mjs configure",
+    "db:stop": "node scripts/local-supabase.mjs stop",
+    "db:staff": "node scripts/bootstrap-local-staff.mjs",
+    "test:integration": "node --test --test-concurrency=1 tests/integration/*.test.mjs"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "5.3.0",
     "@fontsource/dm-sans": "5.3.0",
+    "@supabase/ssr": "0.12.7",
     "@supabase/supabase-js": "2.118.0",
     "lucide-react": "1.66.0",
     "next": "16.4.3",
@@ -31,6 +38,8 @@
     "@tailwindcss/postcss": "4.3.3",
     "eslint": "9.39.5",
     "eslint-config-next": "16.4.3",
+    "pg": "8.23.1",
+    "supabase": "2.122.0",
     "tailwindcss": "4.3.3",
     "vitest": "5.0.5"
   }

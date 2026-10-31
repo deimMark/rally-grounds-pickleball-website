@@ -3,12 +3,12 @@
 ## Project and current authorization
 
 Build a single-club pickleball booking and management application for Rally Grounds,
-San Juan, La Union, Philippines. The user has authorized Phase 1 implementation: a public website, mock court selector,
-and read-only staff dashboard foundation. See `docs/PHASE-1.md` for the approved scope
-changes. Most architecture documents still describe later proposed features.
-
-Keep this phase mock-only: no live booking, payment verification, or calendar sync.
-Supabase is connection setup only; do not implement database schema or staff Auth yet.
+San Juan, La Union, Philippines. Phase 1 is the approved baseline. The user has now
+authorized Phase 2 local database, booking/availability services, staff Auth/RBAC,
+audit and security/concurrency tests. Follow docs/PHASE-2-PLAN.md and record actual
+implementation differences in docs/PHASE-2.md. Use a dedicated Phase 2 branch and small
+logical commits. Public booking UI remains mock-only; do not implement live payment
+workflows, Google Calendar sync or production infrastructure.
 Do not deploy, push code, or create external resources without explicit approval.
 Local planning documents are authorized. Never commit credentials or real customer data.
 
