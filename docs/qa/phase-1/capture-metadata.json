@@ -1,0 +1,52 @@
+{
+  "capturedAt": "2026-10-31T08:01:40.043Z",
+  "reviewTimezone": "Asia/Manila",
+  "mode": "local production build",
+  "browser": "154.0.8037.57",
+  "captures": [
+    {
+      "file": "desktop-homepage.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "file": "five-court-selector.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "file": "staff-dashboard.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "file": "mobile-homepage-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "file": "mobile-navigation-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    }
+  ],
+  "theme": {
+    "navy": "#102b50",
+    "midnight": "#0d1525",
+    "blue": "#1e5a99",
+    "gold": "#d7ad6b",
+    "ivory": "#f8f5ed",
+    "white": ""
+  },
+  "browserErrors": []
+}
