@@ -2,7 +2,7 @@ import { FlaskConical } from 'lucide-react';
 export function DemoNotice({ staff = false }) {
   return <div className="demo-notice"><div className="container flex items-center justify-center gap-2">
     <FlaskConical size={13} aria-hidden="true" />
-    <span>{staff ? 'Staff dashboard demo · Synthetic data only · No authentication or live operations' : 'A first look at Rally Grounds · Demo data only. Booking is not yet available.'}</span>
+    <span>{staff ? 'Staff dashboard · Synthetic data only · No live booking or payment operations' : 'A first look at Rally Grounds · Demo data only. Booking is not yet available.'}</span>
   </div></div>;
 }
 export function DemoBadge({ children = 'DEMO PREVIEW' }) {

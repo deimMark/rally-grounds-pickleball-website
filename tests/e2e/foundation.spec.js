@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { signIn } from './staff-login';
 
 for (const width of [360, 390, 768, 1440]) {
   for (const route of ['/', '/staff']) {
@@ -7,6 +8,7 @@ for (const width of [360, 390, 768, 1440]) {
       await page.setViewportSize({ width, height: 1000 });
       const errors = [];
       page.on('pageerror', (error) => errors.push(error.message));
+      if (route === '/staff') await signIn(page);
       await page.goto(route);
       await expect(page.locator('main h1')).toBeVisible();
       await page.evaluate(() => document.fonts.ready);
@@ -84,8 +86,9 @@ test('open-play samples cannot be selected and court controls work with keyboard
 });
 
 test('staff demo filters synthetic sessions without enabling operations', async ({ page }) => {
+  await signIn(page);
   await page.goto('/staff');
-  await expect(page.getByText('No authentication or live operations', { exact: false })).toBeVisible();
+  await expect(page.getByText('No live booking or payment operations', { exact: false })).toBeVisible();
   await expect(page.getByText('₱1,200', { exact: true })).toBeVisible();
   await expect(page.getByText('₱900', { exact: true })).toBeVisible();
   await expect(page.locator('tbody tr')).toHaveCount(4);
@@ -98,7 +101,8 @@ test('staff demo filters synthetic sessions without enabling operations', async 
 for (const route of ['/', '/staff']) {
   test(`${route} has no serious or critical accessibility violations`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(route);
+    if (route === '/staff') await signIn(page);
+      await page.goto(route);
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
     expect(results.violations.filter((v) => ['serious', 'critical'].includes(v.impact))).toEqual([]);
   });
