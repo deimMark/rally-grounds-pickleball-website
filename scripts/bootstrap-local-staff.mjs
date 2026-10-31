@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto';
 import { writeFileSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
 import pg from 'pg';
-import { localSettings } from './local-settings.mjs';
+import { localSettings, projectRoot } from './local-settings.mjs';
 const settings = localSettings();
 const admin = createClient(settings.API_URL, settings.adminKey, { auth: { persistSession: false, autoRefreshToken: false } });
 const db = new pg.Client({ connectionString: settings.DB_URL });
@@ -26,6 +26,6 @@ try {
     output.push(`TEST_${label.toUpperCase()}_EMAIL=${email}`, `TEST_${label.toUpperCase()}_PASSWORD=${password}`, `TEST_${label.toUpperCase()}_ID=${user.id}`);
   }
   await db.query("insert into public.audit_events(action,entity_type,metadata) values('local.bootstrap','staff_profile','{\"synthetic\":true}')");
-  writeFileSync('.env.test.local', output.join('\n') + '\n', { mode: 0o600 });
+  writeFileSync(`${projectRoot}/.env.test.local`, output.join('\n') + '\n', { mode: 0o600 });
   console.log('Synthetic local staff created; credentials saved only to ignored .env.test.local.');
 } finally { await db.end(); }

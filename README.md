@@ -1,93 +1,98 @@
 # Rally Grounds
 
-Phase 1: a mobile-first public website, interactive mock court selector and read-only
-staff/owner dashboard foundation. Built in the Codex cloud workspace using Next.js
-App Router, React, JavaScript and Tailwind CSS. No VS Code or local checkout is required.
+A single-club pickleball application foundation for San Juan, La Union. Phase 1 is the
+approved visual baseline; Phase 2 adds a local Supabase database, secure staff access,
+versioned policies and tested reservation/availability services. The public selector and
+dashboard figures are still explicitly synthetic. No live payment or guest booking UI.
 
-## Run in the cloud workspace
+## Develop in the cloud workspace
 
-Use Node 24 (the tested version is in `.nvmrc`) and npm 11.9.0. In the cloud terminal:
+No VS Code or local checkout is required. Use Node 24 (`.nvmrc`), npm 11.9.0 and Docker:
 
 ```sh
 cd /workspace/rally-grounds-pickleball-website
 npm --cache /tmp/rally-npm-cache ci
+npm run db:start
+npm run db:migrate
+npm run db:staff
 npm run dev
 ```
 
-The app binds to `0.0.0.0` on port 3000. `/` is the public presentation;
-`/staff` is an explicitly public, synthetic dashboard demo. Use your cloud workspace's
-supported port-viewing mechanism if available. This does not deploy the application.
-This chat's onboarding view may not provide web previews; server checks can still run
-inside the cloud machine. No Supabase configuration is needed for the demo.
+The app listens on `0.0.0.0:3000`. `/` is the public demo, `/staff/login` is staff sign-in,
+and `/staff` requires a validated active staff/owner account. Use a supported cloud
+port-viewing mechanism if available; no deployment is performed by these commands.
+Live database/app processes must be restarted in a new cloud session.
 
-For the optimized application, run `npm run build`, then `npm run start`.
-Live processes must be started again when a cloud session restarts.
+The local-only helpers create ignored `.env.local` connection settings and
+`.env.test.local` synthetic Auth identities/passwords. View local credentials privately
+in the workspace if needed for the walkthrough; do not commit them. There is no default
+production password, public registration or service key in application configuration.
+APP_ORIGIN must match the exact browser origin used for sign-in (default local port 3000).
 
-## Checks
+The CLI uses official slim images and a scoped correction for BusyBox's localhost
+health check in this cloud proxy environment. See [Phase 2 operations](docs/PHASE-2.md).
+Existing different Supabase configuration is not overwritten. No remote project is linked.
+
+For optimized execution, use `npm run build` then `npm run start`. `npm run db:migrate`
+applies pending local migrations; `npm run db:stop` stops this project's containers.
+
+## Validate
 
 ```sh
 npm run lint
 npm run test
+npm run check:secrets
+# DESTRUCTIVE to this designated local synthetic database; never use for real records:
+npm run db:reset
+npm run db:staff
+npm run test:integration
 npm run build
-# Chromium is already installed in this cloud machine:
-PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e
+# Existing cloud Chromium; port 3100 avoids the development server on port 3000:
+TEST_PORT=3100 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e
 ```
 
-Playwright starts the built application automatically if port 3000 is free. Avoid
-running a stale build on that port while testing a new one. Outside this cloud machine,
-install Playwright Chromium with `npx playwright install --with-deps chromium`, then run
-`npm run test:e2e`. The standard Playwright download is blocked by the current cloud
-egress policy; using installed Chromium avoids that download. CI installs its browser.
+Integration tests use real Supabase Auth/PostgREST/PostgreSQL, truncate/reseed domain
+fixtures between tests, and verify 20 simultaneous attempts for one court/time.
+They refuse remote administration targets. Browser tests use synthetic identities and
+retain the existing public/mobile/selector checks alongside staff Auth checks. Traces
+are disabled because Auth traces can contain passwords/session tokens. All generated
+test output and local credentials remain ignored.
 
-## Phase 1 boundaries
+On other machines, install Chromium with `npx playwright install --with-deps chromium`,
+then omit the executable override. The ordinary browser download is blocked by this
+cloud's network policy; installed `/usr/bin/chromium` works. GitHub CI is defined but
+is not executed until a separately authorized push/publication.
 
-- Every availability slot, demo date, session and financial figure is synthetic.
-- Selector previews stay in React memory, reset on reload, collect no personal data,
-  and never create a reservation, hold or payment.
-- `/staff` has no Auth or protected operations. Do not add real records to this route
-  before implementing server authorization and database policies in Phase 2.
-- Supabase has an optional server-only publishable-key connection factory. It is unused
-  by demo loaders, makes no automatic calls, and does not prove connectivity.
-- No live booking, GCash verification, Google Calendar, Reclub synchronization, customer
-  records, database migrations or external resources are included.
-- All demo dates are fixed and explicitly labeled; the app does not pretend to show today.
-- No approved logo was present; the header uses the club's name as text.
+## Data and security boundaries
 
-## Data and design seams
+- `supabase/migrations/` and `supabase/seed.sql`: reproducible local schema and provisional
+  synthetic club configuration. No real customer or payment seed records.
+- `lib/server/booking.js`: authenticated internal quote/create/release/block operations.
+  Database functions revalidate identity, configuration, price and conflicts atomically.
+- `lib/server/availability.js`: safe one-day projection with UTC instants and Manila hours.
+- `lib/supabase/` and `lib/server/staff-auth.js`: server-only connection/Auth and role guards.
+- `lib/demo/` and `lib/server/demo-data.js`: mock presentation fixtures, kept separate from
+  actual reservations. Protected dashboard figures are not live revenue or utilization.
+- `app/globals.css`: supplied brand colors, typography and reusable presentation styles.
 
-`lib/server/demo-data.js` is the server data boundary. The public loader supplies only
-public synthetic fields; the staff demo uses a separate loader. Future Supabase reads
-and authorization belong on that server boundary, not in UI components.
+All introduced tables have deny-by-default RLS and explicit grants. Active staff/owner
+roles come from the database, not client claims. Customer/audit records are owner-only
+in this foundation. No public mutation endpoint, payment workflow or customer API exists.
+Configuration is versioned; agreement snapshots and audit history are immutable.
 
-`lib/demo/` holds branding, presentation-only rates/hours, court coordinates, explicit
-slot fixtures and dashboard examples. These are mock content, not an implementation of
-live policies. Phase 2 will introduce versioned database configuration and rules.
-`app/globals.css` defines the six supplied design colors, typography and reusable
-component styles, using Tailwind v4 theme tokens and utilities. Font files are bundled
-locally through Fontsource; no runtime font service is required.
+Supabase configuration stays server-side. `.env.example` contains names only plus a
+nonsecret local origin. Only publishable keys are accepted by the application factory;
+service-role/admin credentials are confined to guarded local setup helpers.
 
-The latest Phase 1 court arrangement is 3/4/5 across the upper row, Court 2 directly
-below Court 5, and Court 1 directly below Court 2. Map and list use the same identities.
+## Review records
 
-## Optional Supabase connection setup
-
-Copy `.env.example` to `.env.local` only if an approved project is available. Supply
-`SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` through secure environment configuration.
-Only HTTPS or local-loopback HTTP endpoints and `sb_publishable_` keys are accepted.
-Legacy JWT/secret/service-role keys are intentionally unsupported by this Phase 1
-factory. No key needs a `NEXT_PUBLIC_` prefix. Do not add service credentials to the demo.
-
-The app remains mock-only even when configuration exists. Staff SSR Auth/session
-handling, real reads, RLS and Storage policies are later-phase work. Do not reuse this
-stateless connection factory as an authenticated staff session client.
-
-## Documentation
-
-- [Architecture](docs/ARCHITECTURE.md)
-- [Milestones](docs/ROADMAP.md)
-- [Decisions and security risks](docs/DECISIONS-AND-RISKS.md)
-- [Phase 1 scope and verification](docs/PHASE-1.md)
-- [Photo and font attribution](docs/ASSETS.md)
+- [Current Phase 2 implementation and operations](docs/PHASE-2.md)
+- [Phase 2 QA](docs/qa/phase-2/REVIEW.md)
+- [Architecture](docs/ARCHITECTURE.md), [roadmap](docs/ROADMAP.md), [decisions/risks](docs/DECISIONS-AND-RISKS.md)
+- [Phase 1 QA and screenshots](docs/qa/phase-1/REVIEW.md) — historical baseline
+- [Pending Phase 1.1 corrections](docs/PHASE-1.1.md), [asset provenance](docs/ASSETS.md)
 - [Engineering instructions](AGENTS.md)
 
-No deployment, push or external resource creation is authorized by this implementation.
+No official logo was supplied; club-name text remains. Stock photography is credited
+and explicitly identified as not Rally Grounds facilities. No push, deployment, merge,
+production resource or calendar connection is authorized by local startup.

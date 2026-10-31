@@ -1,6 +1,8 @@
 # Milestone-based implementation roadmap
 
-Status: the user has authorized the revised Phase 1 scope in [PHASE-1.md](PHASE-1.md).
+Status: Phase 1 is the approved baseline; Phase 2 implementation is authorized. See
+[PHASE-2.md](PHASE-2.md) and its QA report for current verification and limitations.
+The revised Phase 1 record remains in [PHASE-1.md](PHASE-1.md).
 Supabase is connection-only; database setup/integration gates move to Phase 2.
 The user also specifies Court 1 directly below Court 2 for this phase.
 The original milestone definitions below are retained for traceability. Milestones are
@@ -8,7 +10,7 @@ ordered by dependencies, not calendar promises. Each gate requires recorded comm
 results, and known limitations. Passing a later demo does not waive an earlier gate.
 See `PHASE-1.md` for executed foundation checks; later-phase checks remain unexecuted.
 
-## Phase 0 — Architecture and owner review (current)
+## Phase 0 — Architecture and owner review (completed planning)
 
 Deliverables: workspace inspection, AGENTS.md, architecture, risk/decision register and
 this roadmap. Demonstrate scope and proposed rules without provisioning infrastructure.
@@ -28,7 +30,7 @@ Acceptance criteria:
 Deliverables: pinned Next.js/React/JavaScript/Tailwind project and lockfile; local
 Supabase setup; migrations/test harness; initial CI definition; synthetic fixtures;
 responsive public shell and design tokens. Select licensed placeholder photos with
-source and license records. This phase follows approval; these files do not exist yet.
+source and license records. The revised implementation and its evidence are recorded in PHASE-1.md.
 
 Acceptance criteria:
 

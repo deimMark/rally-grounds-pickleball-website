@@ -1,5 +1,7 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+export const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 export const cliEnvironment = { ...process.env, SUPABASE_HOME: process.env.SUPABASE_HOME || '/tmp/rally-supabase-home', SUPABASE_TELEMETRY_DISABLED: 'true', SUPABASE_USE_SLIM_IMAGES: 'true' };
 export function assertLocalProject() {
   const config = readFileSync(new URL('../supabase/config.toml', import.meta.url), 'utf8');
@@ -7,7 +9,12 @@ export function assertLocalProject() {
 }
 export function runCLI(args) {
   assertLocalProject();
-  return execFileSync(process.execPath, ['node_modules/supabase/dist/supabase.js', ...args], { env: cliEnvironment, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 8 * 1024 * 1024 });
+  try {
+    return execFileSync(process.execPath, ['node_modules/supabase/dist/supabase.js', ...args], { cwd: projectRoot, env: cliEnvironment, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 8 * 1024 * 1024 });
+  } catch (error) {
+    writeFileSync('/tmp/rally-local-cli-error.log', error.stderr || 'Local command failed', { mode: 0o600 });
+    throw new Error('Local Supabase command failed; private diagnostics: /tmp/rally-local-cli-error.log');
+  }
 }
 export function localSettings() {
   const settings = JSON.parse(runCLI(['status', '-o', 'json']));

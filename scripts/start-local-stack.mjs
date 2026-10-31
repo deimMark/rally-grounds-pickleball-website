@@ -1,6 +1,6 @@
 import { spawn, execFileSync } from 'node:child_process';
 import { writeFileSync, chmodSync } from 'node:fs';
-import { cliEnvironment, assertLocalProject } from './local-settings.mjs';
+import { cliEnvironment, assertLocalProject, projectRoot } from './local-settings.mjs';
 // BusyBox wget ignores no_proxy in the cloud's injected proxy environment. Keep the
 // real health check, routing ONLY its exact loopback URL directly. All external
 // destinations keep the normal proxy and TLS behavior. Applied to this local Auth
@@ -13,7 +13,7 @@ esac
 `;
 export async function startLocalStack() {
   assertLocalProject();
-  const child = spawn(process.execPath, ['node_modules/supabase/dist/supabase.js', 'start', '-x', 'studio,storage-api,imgproxy,edge-runtime,logflare,vector,realtime,supavisor,postgres-meta,mailpit'], { env: cliEnvironment, stdio: ['ignore', 'pipe', 'pipe'] });
+  const child = spawn(process.execPath, ['node_modules/supabase/dist/supabase.js', 'start', '-x', 'studio,storage-api,imgproxy,edge-runtime,logflare,vector,realtime,supavisor,postgres-meta,mailpit'], { cwd: projectRoot, env: cliEnvironment, stdio: ['ignore', 'pipe', 'pipe'] });
   let output = ''; let patched = false;
   child.stdout.on('data', (value) => { output += value; });
   child.stderr.on('data', (value) => { output += value; });

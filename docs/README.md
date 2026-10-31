@@ -1,8 +1,9 @@
 # Rally Grounds MVP plan
 
-Status: Phase 1 is implemented and verified under the revised mock-only scope. See [Phase 1 scope and
+Status: Phase 1 is approved; Phase 2 local database/Auth foundations are implemented.
+See [PHASE-2.md](PHASE-2.md) and [current QA](qa/phase-2/REVIEW.md). See [Phase 1 scope and
 verification](PHASE-1.md) for the implementation status and explicit roadmap adjustments.
-The architecture below remains the direction for later live functionality.
+The architecture below remains the direction for later guest booking and live operations.
 
 ## Workspace inspection
 

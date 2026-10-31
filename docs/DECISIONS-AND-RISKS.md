@@ -1,6 +1,7 @@
 # Decisions, assumptions and security risks
 
-Status: unresolved unless explicitly supplied by the user. Recommendations below are
+Status: Phase 2 local foundations are authorized; [PHASE-2.md](PHASE-2.md) records the
+implemented engineering defaults. Commercial decisions remain unresolved unless explicitly supplied by the user. Recommendations below are
 proposals for review, not confirmed business policy. Resolve decisions by the milestone
 that needs them; they need not all block the local technical foundation.
 
@@ -24,7 +25,7 @@ that needs them; they need not all block the local technical foundation.
 | Operational settings | Proposed service-time rates/hours and creation-time contractual terms; confirm how future changes affect already-booked hours and acceptable conflict-resolution process. | Phase 2 |
 | Open play/Reclub | Confirm official HTTPS hosts, participation rules, recurring needs and whether open-play income needs recording. MVP links out and blocks courts; no external registration/payment sync. | Phase 5 |
 | Reporting | Approve service-date booking value versus receipt-date cash and the utilization denominator; decide no-show reporting. No attendance metric without attendance data. | Phase 6 |
-| Branding/content | Obtain logo, exact color values, address/map details, contact info and actual photos; use attributed licensed placeholders until approved. | Phases 1 and 6 |
+| Branding/content | Exact colors were supplied in Phase 1. Obtain the official logo, address/map details, contact info and actual photos; use attributed licensed placeholders until approved. | Phases 1 and 6 |
 | Tax and legal documents | Confirm tax-inclusive pricing, receipt/invoice obligations and Philippine consumer/privacy terms with the club's adviser. The MVP does not claim tax-invoice compliance. | Live launch |
 | Retention | Owner sets customer, payment-evidence, audit and financial retention periods and deletion exceptions. Do not retain screenshots indefinitely by default. | Phase 4/live launch |
 | Infrastructure | Confirm budget, hosting, data region, backup plan, scheduler and email/Auth invitation requirements. No external project creation before approval. | Before provisioning |
@@ -63,6 +64,6 @@ that needs them; they need not all block the local technical foundation.
 ## Review requested
 
 First review the single-club architecture, milestone order and proposed default rules.
-Approval of the plan authorizes the agreed Phase 1 local work only. It does not authorize
-external provisioning, code pushes or deployment. Keep later owner decisions visible
+The user has subsequently authorized Phase 2 local implementation. That authorization
+does not include external provisioning, code pushes, deployment or a merge. Keep later owner decisions visible
 until the corresponding gates are satisfied.

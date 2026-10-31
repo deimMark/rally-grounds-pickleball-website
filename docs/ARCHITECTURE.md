@@ -1,8 +1,8 @@
 # Proposed MVP architecture
 
-Phase 1 implementation follows the revised scope in [PHASE-1.md](PHASE-1.md):
-connection-only Supabase and synthetic presentation data. The live architecture described
-here remains planned, including all database and authorization safeguards.
+Phase 1 remains the approved baseline. Phase 2 implementation now follows
+[PHASE-2.md](PHASE-2.md), including real local database/Auth foundations. Public booking,
+payment workflows and the remaining live modules below are still later-phase work.
 
 ## Application shape
 

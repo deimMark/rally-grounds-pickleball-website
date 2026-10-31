@@ -1,6 +1,8 @@
 # Phase 2 execution proposal — review before implementation
 
-Status: **proposed only; not authorized or implemented by the Phase 1 finalization**.
+Status: the user subsequently authorized Phase 2 implementation. This is the reviewed
+planning reference; actual implementation, refinements and limitations are recorded in
+[PHASE-2.md](PHASE-2.md). Phase 1 finalization itself did not authorize Phase 2.
 Read this with ARCHITECTURE.md, ROADMAP.md, DECISIONS-AND-RISKS.md and AGENTS.md.
 Keep one club per deployment. No tenant/platform layer, live payments, external
 provisioning, production changes, deployment, push or merge is included.
@@ -181,5 +183,5 @@ values. Unresolved operating hours, lead-time equality, payment cutoff/review po
 refund rates and reschedule terms remain in DECISIONS-AND-RISKS.md and block their live
 workflows later; they do not require production credentials or invented policy now.
 
-Phase 1.1 corrections are separately documented in PHASE-1.1.md. Approval of this plan
-must be explicit before executing any of the Phase 2 steps above.
+Phase 1.1 corrections are separately documented in PHASE-1.1.md. The user has now explicitly authorized the Phase 2 implementation; external provisioning,
+push, merge and deployment remain separately restricted.
