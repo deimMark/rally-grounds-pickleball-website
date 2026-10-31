@@ -13,7 +13,17 @@ const clients = {};
 const court = (n) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 const day = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10);
 const at = (hour) => new Date(`${day}T${String(hour).padStart(2, '0')}:00:00+08:00`).toISOString();
-const rpc = (who, name, params) => clients[who].rpc(name, params);
+async function rpc(who, name, params) {
+  if (name === 'create_reservation' && !Object.hasOwn(params, 'p_expected_versions')) {
+    if (who === 'anon') params = { ...params, p_expected_versions: {} };
+    else {
+      const quoted = await clients[who].rpc('quote_reservation', { p_court_id: params.p_court_id, p_start: params.p_start, p_end: params.p_end });
+      if (quoted.error) return quoted;
+      params = { ...params, p_expected_versions: quoted.data.version_context };
+    }
+  }
+  return clients[who].rpc(name, params);
+}
 function reservation(overrides = {}) {
   return { p_court_id: court(1), p_start: at(8), p_end: at(9), p_players: 4, p_source: 'staff', p_request_key: randomUUID(), p_expected_total: 60000, p_hold_until: new Date(Date.now() + 3600000).toISOString(), ...overrides };
 }
@@ -168,8 +178,9 @@ test('club settings are owner-only, versioned and protect occupied timezone chan
   await failure(rpc('owner', 'publish_club_settings', { ...params, p_timezone: 'America/New_York' }), '23514');
 });
 test('deactivation denies an already signed-in staff user and last owner is protected', async () => {
+  const quoted = await success(rpc('staff', 'quote_reservation', { p_court_id: court(1), p_start: at(8), p_end: at(9) }));
   await success(rpc('owner', 'set_staff_role', { p_user_id: identities.TEST_STAFF_ID, p_role: 'staff', p_active: false }));
-  await failure(rpc('staff', 'create_reservation', reservation()), '42501');
+  await failure(clients.staff.rpc('create_reservation', reservation({ p_expected_versions: quoted.version_context })), '42501');
   assert.equal(await success(rpc('staff', 'current_staff_role')), null);
   assert.deepEqual(await success(clients.staff.from('bookings').select('*')), []);
   await failure(rpc('owner', 'set_staff_role', { p_user_id: identities.TEST_OWNER_ID, p_role: 'staff', p_active: true }), '23514');
@@ -236,4 +247,41 @@ test('every introduced table has RLS and private helpers are not executable by a
   assert.equal(rows.length, tables.length); assert.ok(rows.every((row) => row.relrowsecurity));
   const grants = (await pool.query("select has_function_privilege('authenticated','private.quote(uuid,timestamptz,timestamptz)','execute') as quote, has_schema_privilege('anon','private','usage') as private_schema")).rows[0];
   assert.equal(grants.quote, false); assert.equal(grants.private_schema, false);
+});
+test('email password provider works but anonymous registration remains disabled', async () => {
+  const { error } = await clients.anon.auth.signUp({ email: `not-created-${randomUUID()}@rally.test`, password: 'synthetic-registration-must-fail' });
+  assert.ok(error); assert.equal(error.code, 'signup_disabled');
+});
+test('price-only publication does not reject off-hours maintenance occupancy', async () => {
+  await success(rpc('staff', 'block_courts', { p_court_ids: [court(1)], p_start: at(7), p_end: at(8), p_kind: 'maintenance', p_request_key: randomUUID() }));
+  await success(rpc('owner', 'publish_court_config', { p_court_id: court(1), p_effective: null, p_changes: { rate_centavos: 70000 }, p_note: 'Price only; maintenance is unchanged' }));
+  assert.equal((await success(rpc('staff', 'quote_reservation', { p_court_id: court(1), p_start: at(8), p_end: at(9) }))).total_centavos, 70000);
+});
+test('closure validation stops at a later restoration version before an existing booking', async () => {
+  await success(rpc('staff', 'create_reservation', reservation({ p_start: at(10), p_end: at(11) })));
+  await success(rpc('owner', 'publish_court_config', { p_court_id: court(1), p_effective: at(10), p_changes: { enabled: true }, p_note: 'Restore at ten' }));
+  await success(rpc('owner', 'publish_court_config', { p_court_id: court(1), p_effective: at(9), p_changes: { enabled: false }, p_note: 'One-hour closure before restored booking' }));
+  await failure(rpc('staff', 'quote_reservation', { p_court_id: court(1), p_start: at(9), p_end: at(10) }), '23514');
+  await success(rpc('staff', 'quote_reservation', { p_court_id: court(1), p_start: at(10), p_end: at(11) }));
+  const rows = await success(rpc('anon', 'availability', { p_day: day }));
+  assert.equal(rows.filter((row) => row.court_id === court(1)).length, 14);
+});
+test('hours change validates just the affected segment of a spanning agreement', async () => {
+  const booking = await success(rpc('staff', 'create_reservation', reservation({ p_end: at(10), p_expected_total: 120000 })));
+  await success(rpc('owner', 'publish_court_config', { p_court_id: court(1), p_effective: at(9), p_changes: { opening_minute: 540 }, p_note: 'Nine AM opening effective at nine' }));
+  await success(rpc('staff', 'quote_reservation', { p_court_id: court(1), p_start: at(8), p_end: at(10) }));
+  assert.equal((await pool.query('select total_centavos from public.bookings where id=$1', [booking.id])).rows[0].total_centavos, 120000);
+});
+test('creation rejects stale agreed policies even when the quoted total is unchanged', async () => {
+  const quoted = await success(rpc('staff', 'quote_reservation', { p_court_id: court(1), p_start: at(8), p_end: at(9) }));
+  await success(rpc('owner', 'publish_policy', { p_effective: null, p_changes: { no_refund_within_minutes: 2880 }, p_note: 'Synthetic changed terms, same rental price' }));
+  await failure(rpc('staff', 'create_reservation', reservation({ p_expected_versions: quoted.version_context })), '22023');
+  assert.equal(await count('bookings'), 0);
+  await success(rpc('staff', 'create_reservation', reservation()));
+});
+test('missing accepted versions and the old RPC signature cannot bypass agreement checks', async () => {
+  await failure(rpc('staff', 'create_reservation', reservation({ p_expected_versions: null })), '22023');
+  const oldSignature = (await pool.query("select to_regprocedure('public.create_reservation(uuid,timestamptz,timestamptz,integer,text,uuid,integer,timestamptz)') as old")).rows[0].old;
+  assert.equal(oldSignature, null);
+  assert.equal((await pool.query("select has_function_privilege('anon','public.create_reservation(uuid,timestamptz,timestamptz,integer,text,uuid,integer,timestamptz,jsonb)','execute') as allowed")).rows[0].allowed, false);
 });
