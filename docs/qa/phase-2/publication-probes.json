@@ -1,0 +1,44 @@
+{
+  "implementation": "6ef2aed7a473eabbf0b630f4a1674ed9d6578439",
+  "recordedAt": "2026-11-01T18:29:19.571Z",
+  "method": "Local PostgreSQL diagnostic transactions using the synthetic owner context; every mutation rolled back. Auth/RLS evidence comes separately from the real JWT integration suite.",
+  "results": [
+    {
+      "case": "adjacent intervals on the same court",
+      "outcome": "passed",
+      "activeOccupancies": 2
+    },
+    {
+      "case": "same interval on different courts",
+      "outcome": "passed",
+      "distinctCourts": 2
+    },
+    {
+      "case": "partial interval overlap on the same court",
+      "outcome": "passed",
+      "databaseError": "23P01"
+    },
+    {
+      "case": "idempotency result after release",
+      "outcome": "documented limitation",
+      "originalReceiptStatus": "held",
+      "currentBookingStatus": "cancelled",
+      "activeOccupancies": 0
+    },
+    {
+      "case": "90-minute minimum with 60-minute duration increment",
+      "outcome": "reproduced defect",
+      "validTwoHourQuoteCentavos": 120000,
+      "availabilityRows": 0
+    },
+    {
+      "case": "release of non-reservation open-play/maintenance blocks",
+      "outcome": "missing supported operation",
+      "directAppUpdateAllowed": false,
+      "releaseFunctions": [
+        "release_reservation"
+      ]
+    }
+  ],
+  "persistentStateUnchanged": true
+}

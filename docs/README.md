@@ -54,3 +54,11 @@ specified in [PHASE-1-CHECKPOINT.md](PHASE-1-CHECKPOINT.md). See
 [PHASE-1.1.md](PHASE-1.1.md) for pending visual corrections and
 [PHASE-2-PLAN.md](PHASE-2-PLAN.md) for the exact proposed next milestone. These documents
 do not authorize a push, deployment, merge or Phase 2 implementation.
+
+## Phase 2 publication review and proposed Phase 3
+
+Both approved development branches are published. See the
+[publication review](qa/phase-2/PUBLICATION-REVIEW.md) for verified history, edge-case
+results and newly reproduced configuration limitations. The
+[Phase 3 plan](PHASE-3-PLAN.md) is review-only; publication does not authorize its
+implementation, a merge, deployment or production resources.
