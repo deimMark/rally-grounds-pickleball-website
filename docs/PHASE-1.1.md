@@ -1,23 +1,50 @@
-# Phase 1.1 visual corrections — proposed, not implemented
+# Phase 1.1 — visual QA corrections
 
-Phase 1 QA is provisionally approved. These are small presentation corrections to
-complete before the next owner walkthrough. They do not authorize Phase 2, live
-booking, external resources, a push or a deployment. Preserve the existing design and
-use the approved official artwork; do not create a new club logo.
+Implemented locally on `phase-1-1-visual-qa`, branched from `owner-demo` at
+`1a9b04c262759ce62bf72573a86e3924c6809c48`. The approved Modern Clubhouse / Athletic
+Blue direction, fonts, hero court illustration, court layout and mock-only application
+boundaries are preserved. No Phase 2/3 code is merged and no deployment is performed.
 
-| Correction | Planned change | Acceptance check |
-| --- | --- | --- |
-| Official logo integration | After the owner supplies the approved SVG or transparent PNG, inspect/sanitize it, retain its provenance, place it in `public/branding/`, register path/alt/dimensions in the presentation configuration and pass it to the shared `Brand` component. Use supplied dark/light variants only. No upload interface or Storage bucket is required. | Correct official artwork in public header/footer and staff shell at 390/1440 widths; preserved aspect ratio, accessible home link, no clipping, no external asset calls. Missing asset remains an explicit blocker to this item only. |
-| Gold icon consistency | Replace the platform-dependent hero star emoji with a deterministic decorative SVG/CSS shape. Use champagne gold `#D7AD6B` for decorative gold accents. Review darker `#9B702E` punctuation separately; retain an accessible darker tone where actual text contrast requires it. | Hero decoration stays gold on Chromium, Firefox and Safari; decorative icons are hidden from assistive technology; labels/controls retain AA contrast. No new logo or unsupported brand variant. |
-| Warm neutral surfaces | Consolidate repeated supporting surface values into a small set of named surface/semantic tokens. Replace or explicitly approve cool dashboard `#F3F5F7` and community `#EEEEE8` backgrounds against warm ivory `#F8F5ED`. Retain labeled semantic status distinctions. | Public/staff screenshots share the approved warm surface treatment; borders, focus and status labels remain distinguishable, with no color-only state communication. |
-| Helper text readability | Increase informative helper/status/attribution text from current 8–10 px sizing; target at least 12 px for meaningful helper text. Reserve smaller display microcopy for nonessential decorative text only. | Readable at 390 px and 200% zoom without clipping; no page overflow at 360/390/768/1440; keyboard focus, dropdowns and preview remain usable. |
+| Finding before | Correction |
+| --- | --- |
+| Mobile schedule status column required horizontal scrolling | Up to 760 CSS px, semantic booking cards display court, reference, time, session type and booking status. Desktop keeps a wrapping table. Both render from the same filtered data; the hidden representation is also hidden from keyboard/accessibility navigation. |
+| “Net collected” label; manually formatted synthetic totals | Renamed to **Net collections**, calculated from integer centavos: verified 120,000 − completed refunds 30,000 = 90,000 (PHP 900). Unverified 60,000 is excluded. Every metric retains DEMO FIGURE. The repository did not contain the reported “Not collected” string. |
+| Unrelated coastal photograph | Local HD community doubles pickleball photo replaces it, via documented Wikimedia distribution, with creator/source/license links and explicit illustrative/not-facility caption. Next.js Image retains responsive optimization. |
+| Informative helpers at 6–11 px | Minimum 12 px across helpers, status, reference, notices and attribution. Headings and display font direction remain intact. Enlarged mobile hero space prevents lettering/helper overlap. |
+| Cool supporting surfaces / inconsistent gold decoration | Named warm surface tokens; existing navy/blue/ivory palette; champagne-gold decorative accents; Lucide asterisk replaces text/emoji glyph. Darker semantic status colors remain for readable contrast. |
+| Unverified north arrow | Removed from court map. Court positions and interactions unchanged. |
+| Missing detailed contact presentation | Supplied name/address/phone are data-driven, visibly labeled draft/owner confirmation pending, with a plain-language unverified warning. No telephone/map/messaging link or LocalBusiness structured data implies verification. Hours stay provisional. |
+| Official logo unavailable | Workspace/repository asset search found no supplied approved logo. Shared text wordmark stays; no invented official mark or black-square image. |
 
-After an authorized styling update, run lint, units, production build and the affected
-browser/accessibility checks. Refresh all five QA screenshots and document changed
-visuals; do not overwrite the existing Phase 1 checkpoint captures without preserving
-which revision they describe. Cross-browser checks need the relevant browser runtimes;
-report any unavailable checks explicitly.
+## Verification
 
-The official logo can be attached in chat or uploaded through the cloud workspace.
-No VS Code/local checkout is required. Logo integration is still pending the asset and
-separate authorization to make these visual changes.
+See [QA report and all five screenshots](qa/phase-1.1/REVIEW.md). Actual checks include
+lint, 17 units, 21 browser tests, production build, credential-pattern scans and fresh
+local desktop/mobile captures with axe scans and explicit text contrast calculations.
+
+Run the capture helper after building and starting a local production server on 3101:
+
+```sh
+npm run build
+npm run start -- --port 3101
+# In a second terminal:
+PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium node scripts/capture-phase-1-1.mjs
+```
+
+The helper targets loopback only. Historical Phase 1 screenshots remain intact. New
+captures use only synthetic schedule/financial data and the explicitly supplied draft
+club contact, never customer information or credentials.
+
+## Remaining gates
+
+Official logo and actual facility media are still missing. Follow [asset provenance](ASSETS.md)
+when replacing photography; preserve its credit and CC BY-SA license. The creator/license
+are documented by the public source distribution; direct Commons access is blocked in
+this cloud. Actual address/contact and operating hours require owner confirmation.
+Cross-browser/manual assistive-technology review remains useful; automated accessibility
+scans and contrast calculations do not establish a complete WCAG conformance audit.
+
+All reservations, dates, availability and analytics remain synthetic. `/staff` is a public,
+read-only demo, not real staff access. No contact collection, payments, booking mutations,
+Supabase connection, push, merge or deployment is part of this checkpoint. `owner-demo`
+and all Phase 3 branches remain unchanged. Any publication/deployment requires approval.

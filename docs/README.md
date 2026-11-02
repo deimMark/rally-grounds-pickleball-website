@@ -1,3 +1,7 @@
+Current visual review: [Phase 1.1](PHASE-1.1.md) and
+[QA screenshots](qa/phase-1.1/REVIEW.md), on its own branch from owner-demo.
+The original planning record below is retained for context.
+
 # Rally Grounds MVP plan
 
 Status: Phase 1 is implemented and verified under the revised mock-only scope. See [Phase 1 scope and

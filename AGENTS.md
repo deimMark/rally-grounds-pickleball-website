@@ -3,16 +3,17 @@
 ## Project and current authorization
 
 Build a single-club pickleball booking and management application for Rally Grounds,
-San Juan, La Union, Philippines. This `owner-demo` branch starts from approved Phase 1
-checkpoint 753901cd3363a102d34c0cc77fbdcdfa2bde9a2b. Preserve its responsive mock-only
-public website, court selector and read-only synthetic dashboard. Do not merge Phase 2/3
-backend code, collect customer data, accept payments or require Supabase credentials.
-See docs/OWNER-DEMO.md for validation and the Vercel authorization checkpoint.
+San Juan, La Union, Philippines. The current branch `phase-1-1-visual-qa` is authorized
+for focused visual QA corrections from owner-demo commit
+1a9b04c262759ce62bf72573a86e3924c6809c48. See docs/PHASE-1.1.md and its QA report.
+Preserve the responsive design, five-court selector, synthetic data and mock-only public
+website/read-only dashboard. No Phase 2/3 backend code, customer collection or payments.
+Do not invent a logo; use supplied approved artwork only, otherwise retain text branding.
+Draft club address/phone and provisional hours must never appear owner-confirmed.
 
-The user authorizes a separate Vercel Preview only when authenticated and permitted.
-Never use --prod, change the default branch, configure a domain/production service, or
-bypass account authorization/billing requirements. Stop before deployment if those are
-required. No Phase 3B work is authorized. Never commit credentials or real customer data.
+Do not push, merge, deploy, change production resources or begin Phase 3B. Keep owner-demo
+and Phase 3 branches unchanged. Capture requested screenshots, run appropriate checks
+and save a local commit for review. Never commit credentials or real customer data.
 
 ## Stack and boundaries
 

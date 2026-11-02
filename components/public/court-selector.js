@@ -22,11 +22,11 @@ export function CourtSelector({ club, courts, days, availability }) {
       <div className="section-top"><div><p className="eyebrow"><span />FIND YOUR SIDE OF THE COURT</p><h2 id="courts-heading">Five courts. Endless possibilities.</h2></div><p className="section-aside">Pick your court. Find your rhythm.<br />Get a feel for your next game.</p></div>
       <div className="selector-shell">
         <div className="selector-toolbar"><div className="flex items-center gap-3 flex-wrap"><DemoBadge>MOCK AVAILABILITY</DemoBadge><span className="small-muted">All times in {club.timezone}</span></div>
-          <div className="view-switch" aria-label="Court view"><button aria-pressed={view === 'map'} onClick={() => setView('map')}><Map size={15} aria-hidden="true" />Map</button><button aria-pressed={view === 'list'} onClick={() => setView('list')}><List size={15} aria-hidden="true" />List</button></div>
+          <div className="view-switch" role="group" aria-label="Court view"><button aria-pressed={view === 'map'} onClick={() => setView('map')}><Map size={15} aria-hidden="true" />Map</button><button aria-pressed={view === 'list'} onClick={() => setView('list')}><List size={15} aria-hidden="true" />List</button></div>
         </div>
         <div className="selector-body">
           <div className="court-map-panel">
-            <div className="map-topline"><span className="map-label">THE GROUNDS / 01</span><span className="map-orientation" aria-hidden="true">N ↑</span></div>
+            <div className="map-topline"><span className="map-label">THE GROUNDS / 01</span></div>
             <div className={view === 'map' ? 'court-map' : 'court-list'} role="group" aria-label="Select a demo court">
               {courts.map((item) => {
                 const status = getCourtStatus(getDemoSlots(availability, dayId, item.id));

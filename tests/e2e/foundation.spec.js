@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-for (const width of [360, 390, 768, 1440]) {
+for (const width of [320, 360, 390, 768, 1440]) {
   for (const route of ['/', '/staff']) {
     test(`${route} fits ${width}px with working navigation and loaded assets`, async ({ page }) => {
       await page.setViewportSize({ width, height: 1000 });
@@ -103,3 +103,63 @@ for (const route of ['/', '/staff']) {
     expect(results.violations.filter((v) => ['serious', 'critical'].includes(v.impact))).toEqual([]);
   });
 }
+
+for (const width of [320, 360, 390, 760]) {
+  test(`mobile schedule exposes every booking detail at ${width}px and preserves filtering`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto('/staff');
+    await expect(page.locator('.schedule-table-wrapper')).toBeHidden();
+    const cards = page.getByRole('list', { name: 'Synthetic booking details' });
+    await expect(cards).toBeVisible();
+    await expect(cards.locator('li')).toHaveCount(4);
+    for (const card of await cards.locator('li').all()) {
+      await expect(card.getByRole('heading')).toBeVisible();
+      for (const label of ['Reference', 'Time', 'Session type', 'Booking status']) {
+        await expect(card.locator('dt').filter({ hasText: label })).toBeVisible();
+      }
+      await expect(card.locator('.status-pill')).toBeVisible();
+      expect(await card.evaluate((node) => [...node.querySelectorAll('dd, .status-pill')].every((field) => {
+        const box = field.getBoundingClientRect();
+        return field.scrollWidth <= field.clientWidth + 1 && box.left >= 0 && box.right <= innerWidth;
+      }))).toBe(true);
+    }
+    const filter = page.getByLabel('Filter sample schedule');
+    await filter.focus();
+    await expect(filter).toBeFocused();
+    await filter.selectOption('review');
+    await expect(cards.locator('li')).toHaveCount(1);
+    await expect(cards).toContainText('DEMO-002');
+    await expect(cards).toContainText('Pending review');
+    await expect(page.getByRole('status')).toContainText('1 synthetic session');
+    await filter.selectOption('all');
+    await expect(cards.locator('li')).toHaveCount(4);
+  });
+}
+
+test('desktop schedule keeps all statuses and demo collection labels visible', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto('/staff');
+  await expect(page.locator('.schedule-cards')).toBeHidden();
+  expect(await page.locator('.schedule-table-wrapper').evaluate((node) => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
+  for (const status of await page.locator('tbody .status-pill').all()) await expect(status).toBeVisible();
+  const net = page.locator('.metric-card').filter({ hasText: 'Net collections' });
+  await expect(net).toContainText('₱900');
+  await expect(net).toContainText('DEMO FIGURE');
+});
+
+test('draft contact stays unverified and interactive targets remain usable', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await expect(page.locator('.draft-contact')).toContainText('OWNER CONFIRMATION PENDING');
+  await expect(page.locator('.draft-contact')).toContainText('0917 777 3933');
+  await expect(page.locator('.draft-contact')).toContainText('These supplied details are unverified');
+  await expect(page.locator('form, input, a[href^="tel:"], a[href^="mailto:"]')).toHaveCount(0);
+  await expect(page.locator('.map-orientation')).toHaveCount(0);
+  for (const selector of ['.mobile-menu', '.view-switch button', '.session-panel select', '.time-slots button', '.session-cta']) {
+    for (const control of await page.locator(selector).all()) {
+      const box = await control.boundingBox();
+      expect(box.height).toBeGreaterThanOrEqual(44);
+      expect(box.width).toBeGreaterThanOrEqual(44);
+    }
+  }
+});

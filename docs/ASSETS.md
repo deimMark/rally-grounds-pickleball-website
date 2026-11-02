@@ -4,26 +4,38 @@ No existing Rally Grounds logo was found. The site uses the club name as plain t
 no replacement logo has been designed. The decorative court illustration is original
 CSS presentation artwork and is explicitly labeled as a design concept.
 
-## Replaceable stock photograph
+## Replaceable community photograph — Phase 1.1
 
-- Local file: `public/images/club-placeholder.jpg` (1280 × 853 pixels, HD).
-- Title: **Man looking out to sea**; photographer: **Karolina Grabowska**.
-- Original source: https://kaboompics.com/photo/5269/man-looking-out-to-sea
-- License: Kaboompics free photo license, https://kaboompics.com/page/license-and-faq
-  (commercial/noncommercial website use; do not resell or redistribute as stock).
-- Retrieved from Tabler's existing photo distribution at commit
-  `096491dea4886f78891c2e29310351d5aee6c460`:
-  `shared/static/photos/man-looking-out-to-sea.jpg`.
-- Upstream provenance (author, source, original resolution):
-  https://github.com/tabler/tabler/blob/096491dea4886f78891c2e29310351d5aee6c460/shared/data/photos.json
-- The photo is a stock coastal scene from Bulgaria. It depicts neither the Rally Grounds
-  facilities nor La Union. The image alt text and visible caption state its stock status.
-- Phase 1 renders the asset locally without calls to a stock-photo provider. Change
-  `club.media` in `lib/demo/club.js` and the attribution here when replacing it with
-  approved club imagery. Future media management belongs behind owner authorization.
-- Photograph copyright remains with its creator; the upstream UI software's MIT license
-  is not a replacement for the photograph's license. Obtain the club's approved media
-  before public launch and preserve current license/source records.
+- Local file: `public/images/pickleball-community.jpg`, 1600 × 1066 JPEG (HD).
+- Work: **“Pickleball Players”**; creator: **TheVillagesFL**.
+- Original file/source: https://commons.wikimedia.org/wiki/File:Pickleball_Players.jpg
+- License: **Creative Commons Attribution-ShareAlike 4.0 International**,
+  https://creativecommons.org/licenses/by-sa/4.0/ . Commercial reuse is allowed subject
+  to attribution, license notice and ShareAlike for adapted photography. This does not
+  assign the photograph's copyright to Rally Grounds or automatically license the
+  entire application under CC BY-SA.
+- Retrieved 2026-11-02 from the existing bundled Wikimedia photo distribution in
+  `adaipule1989/pickleball-propasal`, commit
+  `1d44f45bc04945f5d45078ab3354b448df8630b6`, file
+  `assets/pickleball-community.jpg`:
+  https://github.com/adaipule1989/pickleball-propasal/blob/1d44f45bc04945f5d45078ab3354b448df8630b6/assets/pickleball-community.jpg
+- Source/license evidence: that revision's README “Source material and photography”
+  and HTML footer explicitly identify the work, creator, Commons source and CC BY-SA 4.0.
+  Direct Commons/provider access is blocked in this cloud; retrieval used the public
+  GitHub distribution with its attribution preserved. No photograph-license claim is
+  inferred from a software license or merely from a publicly accessible repository.
+- The checked-in JPEG is copied unchanged. Next.js `Image` performs responsive
+  optimization; CSS uses a cover crop for presentation. Any adapted rendition retains
+  the same credit/license. It depicts an outdoor community doubles game, not an indoor
+  Rally Grounds facility. Visible caption: “Illustrative stock photo · not Rally Grounds
+  facilities”; creator/source and license links appear below it. No endorsement by the
+  pictured players is claimed. Do not repurpose as an identifiable person testimonial.
+- Photo credit/licensing/alt/path are configured in `lib/demo/club.js`; no remote photo
+  request is needed at runtime. Next.js serves its local optimized image endpoint.
+- SHA-256 for the bundled original is recorded in the Phase 1.1 QA metadata.
+- The previous coastal photograph has been removed from `public/`. Historical Phase 1
+  screenshots remain unmodified and retain their original dated context. Its former
+  Kaboompics provenance is available in Git history at the owner-demo baseline.
 
 ## Fonts and icons
 

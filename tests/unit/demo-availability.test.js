@@ -31,3 +31,13 @@ describe('demo court data and display', () => {
     expect(formatMoney(60050)).toBe('₱600.50');
   });
 });
+
+describe('synthetic collections', () => {
+  it('subtracts completed refunds and excludes unverified claims from net collections', async () => {
+    const { demoDashboard, demoFinances } = await import('../../lib/demo/dashboard');
+    const net = demoDashboard.metrics.find((metric) => metric.label === 'Net collections');
+    expect(demoFinances.verifiedCentavos - demoFinances.refundedCentavos).toBe(90000);
+    expect(net.value).toBe(formatMoney(90000));
+    expect(demoFinances.unverifiedCentavos).toBe(60000);
+  });
+});

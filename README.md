@@ -1,3 +1,7 @@
+> Phase 1.1 visual corrections: local review branch `phase-1-1-visual-qa`.
+> See [changes and validation](docs/PHASE-1.1.md) and [QA/screenshots](docs/qa/phase-1.1/REVIEW.md).
+> The published `owner-demo` branch remains unchanged; these corrections are not deployed.
+
 > Owner demonstration branch: Phase 1 mock-only baseline. See
 > [Owner demo checkpoint](docs/OWNER-DEMO.md) for tests, limitations and Vercel authorization.
 > No guest booking, payment collection or Supabase configuration is required.

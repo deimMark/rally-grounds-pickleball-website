@@ -1,0 +1,55 @@
+{
+  "capturedAt": "2026-11-02T07:45:39.417Z",
+  "branch": "phase-1-1-visual-qa",
+  "baseCommit": "1a9b04c262759ce62bf72573a86e3924c6809c48",
+  "revision": "Phase 1.1 working tree captured before its checkpoint commit",
+  "photoSha256": "82702a41b3db070269ef7368c602bb8a1431b0912ce2b5589a5c82c303e9a4c0",
+  "records": [
+    {
+      "name": "desktop-homepage",
+      "route": "/",
+      "width": 1440,
+      "violations": [],
+      "contrastNodesPassed": 89,
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 23
+        }
+      ],
+      "minimumHelperPixels": 12
+    },
+    {
+      "name": "mobile-homepage-390",
+      "route": "/",
+      "width": 390,
+      "violations": [],
+      "contrastNodesPassed": 87,
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 18
+        }
+      ],
+      "minimumHelperPixels": 12
+    },
+    {
+      "name": "desktop-staff-dashboard",
+      "route": "/staff",
+      "width": 1440,
+      "violations": [],
+      "contrastNodesPassed": 92,
+      "incompleteRules": [],
+      "minimumHelperPixels": 12
+    },
+    {
+      "name": "mobile-staff-dashboard-390",
+      "route": "/staff",
+      "width": 390,
+      "violations": [],
+      "contrastNodesPassed": 101,
+      "incompleteRules": [],
+      "minimumHelperPixels": 12
+    }
+  ]
+}
