@@ -1,7 +1,12 @@
 # Phase 3 proposal — real guest reservation holds
 
-Status: **review only; not implemented or authorized by the publication task**.
-Baseline: approved implementation `6ef2aed7a473eabbf0b630f4a1674ed9d6578439`.
+Status: **Phase 3A foundation subset implemented; full guest flow remains proposed**.
+Reviewed baseline: `1e173f31db6c35c143f5637e365918b721c8f825`, containing approved
+implementation `6ef2aed7a473eabbf0b630f4a1674ed9d6578439` unchanged.
+See [Phase 3A](PHASE-3A.md) and [QA](qa/phase-3a/REVIEW.md) for R1/R2/R3 corrections.
+The following full-phase scope is retained for planning; use
+[Phase 3B contracts](PHASE-3B-CONTRACTS.md) for the detailed proposed guest boundary.
+No guest implementation is authorized by completing Phase 3A.
 See [publication review](qa/phase-2/PUBLICATION-REVIEW.md), ARCHITECTURE.md,
 ROADMAP.md and DECISIONS-AND-RISKS.md. Preserve the single-club deployment model,
 server/database authority, staff RBAC, UTC storage and Asia/Manila evaluation.

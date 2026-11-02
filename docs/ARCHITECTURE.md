@@ -3,6 +3,9 @@
 Phase 1 remains the approved baseline. Phase 2 implementation now follows
 [PHASE-2.md](PHASE-2.md), including real local database/Auth foundations. Public booking,
 payment workflows and the remaining live modules below are still later-phase work.
+Phase 3A adds the service contracts in [PHASE-3A.md](PHASE-3A.md): selected-duration
+availability, immutable receipt/current-state separation and safe block release.
+[Phase 3B contracts](PHASE-3B-CONTRACTS.md) are proposed, not implemented.
 
 ## Application shape
 

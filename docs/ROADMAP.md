@@ -1,14 +1,14 @@
 # Milestone-based implementation roadmap
 
-Status: Phase 1 is the approved baseline; Phase 2 implementation is authorized. See
-[PHASE-2.md](PHASE-2.md) and its QA report for current verification and limitations.
-The revised Phase 1 record remains in [PHASE-1.md](PHASE-1.md).
-Supabase is connection-only; database setup/integration gates move to Phase 2.
-The user also specifies Court 1 directly below Court 2 for this phase.
-The original milestone definitions below are retained for traceability. Milestones are
-ordered by dependencies, not calendar promises. Each gate requires recorded commands,
-results, and known limitations. Passing a later demo does not waive an earlier gate.
-See `PHASE-1.md` for executed foundation checks; later-phase checks remain unexecuted.
+Status: Phase 1 is approved; Phase 2 foundations and the authorized Phase 3A
+corrections are implemented locally. See [Phase 3A](PHASE-3A.md) and its
+[QA](qa/phase-3a/REVIEW.md). The full guest workflow is still proposed in
+[Phase 3](PHASE-3-PLAN.md) and [Phase 3B contracts](PHASE-3B-CONTRACTS.md).
+The revised Phase 1 record remains in [PHASE-1.md](PHASE-1.md), including the
+Court 1 below Court 2 layout. The original milestone definitions below are retained
+for traceability; their proposed checks are not claims of completed later phases.
+Each gate requires recorded results and known limitations. No Phase 3B implementation,
+push, merge, deployment or production provisioning is currently authorized.
 
 ## Phase 0 — Architecture and owner review (completed planning)
 

@@ -1,7 +1,8 @@
 # Decisions, assumptions and security risks
 
-Status: Phase 2 local foundations are authorized; [PHASE-2.md](PHASE-2.md) records the
-implemented engineering defaults. Commercial decisions remain unresolved unless explicitly supplied by the user. Recommendations below are
+Status: Phase 2 foundations and Phase 3A corrections are implemented locally;
+[PHASE-3A.md](PHASE-3A.md) records resolved defects and remaining boundaries.
+[PHASE-2.md](PHASE-2.md) records the original engineering defaults. Commercial decisions remain unresolved unless explicitly supplied by the user. Recommendations below are
 proposals for review, not confirmed business policy. Resolve decisions by the milestone
 that needs them; they need not all block the local technical foundation.
 
@@ -67,3 +68,17 @@ First review the single-club architecture, milestone order and proposed default 
 The user has subsequently authorized Phase 2 local implementation. That authorization
 does not include external provisioning, code pushes, deployment or a merge. Keep later owner decisions visible
 until the corresponding gates are satisfied.
+
+## Phase 3A review checkpoint
+
+R1 selected-duration consistency, R2 authoritative replay status and R3 block release
+are resolved with additive migrations and regression tests; see [QA](qa/phase-3a/REVIEW.md).
+The agreed 90/60 interpretation is the existing increment-multiple rule: first legal
+session is 120 minutes. Historical agreements and immutable receipts remain unchanged.
+
+R4 autonomous expiry remains unimplemented. Deadline-aware status and write-time cleanup
+protect eligibility but do not establish scheduler health or physically reconcile idle
+rows. Guest capability authorization, public contact collection, durable shared admission
+limits and the privileged guest gateway remain proposals in
+[Phase 3B contracts](PHASE-3B-CONTRACTS.md). No guest privacy/booking launch claim follows
+from the staff-only tests. Owner policy/retention/abuse-budget approvals remain open.

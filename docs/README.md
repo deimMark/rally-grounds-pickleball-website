@@ -1,6 +1,8 @@
 # Rally Grounds MVP plan
 
-Status: Phase 1 is approved; Phase 2 local database/Auth foundations are implemented.
+Status: Phase 1 is approved; Phase 2 local database/Auth foundations and Phase 3A
+corrections are implemented. See [Phase 3A](PHASE-3A.md), its
+[QA record](qa/phase-3a/REVIEW.md) and [proposed Phase 3B contracts](PHASE-3B-CONTRACTS.md).
 See [PHASE-2.md](PHASE-2.md) and [current QA](qa/phase-2/REVIEW.md). See [Phase 1 scope and
 verification](PHASE-1.md) for the implementation status and explicit roadmap adjustments.
 The architecture below remains the direction for later guest booking and live operations.
@@ -60,5 +62,6 @@ do not authorize a push, deployment, merge or Phase 2 implementation.
 Both approved development branches are published. See the
 [publication review](qa/phase-2/PUBLICATION-REVIEW.md) for verified history, edge-case
 results and newly reproduced configuration limitations. The
-[Phase 3 plan](PHASE-3-PLAN.md) is review-only; publication does not authorize its
-implementation, a merge, deployment or production resources.
+[Phase 3 plan](PHASE-3-PLAN.md) now distinguishes completed Phase 3A corrections from
+the proposed guest workflow. Phase 3B implementation, publication, merge, deployment
+and production resources require separate authorization.

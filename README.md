@@ -3,7 +3,8 @@
 A single-club pickleball application foundation for San Juan, La Union. Phase 1 is the
 approved visual baseline; Phase 2 adds a local Supabase database, secure staff access,
 versioned policies and tested reservation/availability services. The public selector and
-dashboard figures are still explicitly synthetic. No live payment or guest booking UI.
+dashboard figures are still explicitly synthetic. No live payment or guest booking UI. Phase 3A corrects selected-duration availability,
+receipt/current-state separation and authorized block release; see its review records below.
 
 ## Develop in the cloud workspace
 
@@ -86,7 +87,8 @@ service-role/admin credentials are confined to guarded local setup helpers.
 
 ## Review records
 
-- [Current Phase 2 implementation and operations](docs/PHASE-2.md)
+- [Phase 3A changes](docs/PHASE-3A.md), [QA](docs/qa/phase-3a/REVIEW.md), [proposed Phase 3B contracts](docs/PHASE-3B-CONTRACTS.md)
+- [Phase 2 implementation and operations](docs/PHASE-2.md)
 - [Phase 2 QA](docs/qa/phase-2/REVIEW.md)
 - [Architecture](docs/ARCHITECTURE.md), [roadmap](docs/ROADMAP.md), [decisions/risks](docs/DECISIONS-AND-RISKS.md)
 - [Phase 1 QA and screenshots](docs/qa/phase-1/REVIEW.md) — historical baseline
