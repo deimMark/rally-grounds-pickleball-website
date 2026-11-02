@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeAvailability, validateClubDay } from '../../lib/domain/availability';
+import { normalizeAvailability, validateClubDay, validateSelectedDuration } from '../../lib/domain/availability';
 import { isTrustedOrigin } from '../../lib/domain/auth-origin';
 describe('availability service boundary', () => {
   it('accepts a real explicit club day including leap day', () => {
@@ -23,5 +23,18 @@ describe('cookie mutation origin checks', () => {
   it('fails closed when server origin is absent or malformed', () => {
     expect(isTrustedOrigin('https://club.example', undefined)).toBe(false);
     expect(isTrustedOrigin('https://club.example', 'malformed')).toBe(false);
+  });
+});
+
+describe('selected duration request validation', () => {
+  it('allows omitted duration for the database policy-derived default', () => {
+    expect(validateSelectedDuration()).toBeNull();
+    expect(validateSelectedDuration(null)).toBeNull();
+  });
+  it.each([60, 90, 120, 1440])('passes integer %s to the database policy validator', (value) => {
+    expect(validateSelectedDuration(value)).toBe(value);
+  });
+  it.each([0, -1, 1441, 60.5, '60', NaN, Infinity])('rejects invalid technical request %s', (value) => {
+    expect(() => validateSelectedDuration(value)).toThrow('Invalid selected duration');
   });
 });

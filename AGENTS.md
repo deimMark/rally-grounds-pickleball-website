@@ -3,12 +3,13 @@
 ## Project and current authorization
 
 Build a single-club pickleball booking and management application for Rally Grounds,
-San Juan, La Union, Philippines. Phase 1 is the approved baseline. The user has now
-authorized Phase 2 local database, booking/availability services, staff Auth/RBAC,
-audit and security/concurrency tests. Follow docs/PHASE-2-PLAN.md and record actual
-implementation differences in docs/PHASE-2.md. Use a dedicated Phase 2 branch and small
-logical commits. Public booking UI remains mock-only; do not implement live payment
-workflows, Google Calendar sync or production infrastructure.
+San Juan, La Union, Philippines. Phase 3A is authorized on a dedicated branch from
+reviewed Phase 2 HEAD 1e173f31db6c35c143f5637e365918b721c8f825: fix duration
+consistency, authoritative staff booking status and safe court-block release. Prepare
+Phase 3B contracts only; do not implement guest capabilities, guest endpoints, payment
+collection or the full guest flow. Preserve existing agreements and the mock public UI.
+Use additive migrations, synthetic fixtures and small logical local commits. Report
+actual test outcomes and unresolved risks in docs/PHASE-3A.md and its QA record.
 Do not deploy, push code, or create external resources without explicit approval.
 Local planning documents are authorized. Never commit credentials or real customer data.
 
