@@ -1,0 +1,103 @@
+{
+  "capturedAt": "2026-11-02T09:38:21.401Z",
+  "baseCommit": "06134a67f67c6ba4d174ba1e982b5c4a219ef4ad",
+  "revision": "Court orientation correction working tree, before its commit",
+  "records": [
+    {
+      "name": "desktop-court-selector",
+      "width": 1440,
+      "geometry": [
+        {
+          "label": "Court 3, Available",
+          "x": 229.40625,
+          "y": 1220.140625,
+          "width": 109.5,
+          "height": 240.890625
+        },
+        {
+          "label": "Court 4, Available",
+          "x": 352.90625,
+          "y": 1220.140625,
+          "width": 109.5,
+          "height": 240.890625
+        },
+        {
+          "label": "Court 5, Open play",
+          "x": 476.40625,
+          "y": 1220.140625,
+          "width": 109.5,
+          "height": 240.890625
+        },
+        {
+          "label": "Court 2, Available",
+          "x": 476.40625,
+          "y": 1475.03125,
+          "width": 233,
+          "height": 105.90625
+        },
+        {
+          "label": "Court 1, Available",
+          "x": 476.40625,
+          "y": 1594.9375,
+          "width": 233,
+          "height": 105.90625
+        }
+      ],
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 14
+        }
+      ]
+    },
+    {
+      "name": "mobile-court-selector-390",
+      "width": 390,
+      "geometry": [
+        {
+          "label": "Court 3, Available",
+          "x": 33,
+          "y": 1393.796875,
+          "width": 75,
+          "height": 165
+        },
+        {
+          "label": "Court 4, Available",
+          "x": 116,
+          "y": 1393.796875,
+          "width": 75,
+          "height": 165
+        },
+        {
+          "label": "Court 5, Open play",
+          "x": 199,
+          "y": 1393.796875,
+          "width": 75,
+          "height": 165
+        },
+        {
+          "label": "Court 2, Available",
+          "x": 199,
+          "y": 1566.796875,
+          "width": 158,
+          "height": 71.8125
+        },
+        {
+          "label": "Court 1, Available",
+          "x": 199,
+          "y": 1646.609375,
+          "width": 158,
+          "height": 71.8125
+        }
+      ],
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 12
+        }
+      ]
+    }
+  ]
+}

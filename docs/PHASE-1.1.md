@@ -48,3 +48,11 @@ All reservations, dates, availability and analytics remain synthetic. `/staff` i
 read-only demo, not real staff access. No contact collection, payments, booking mutations,
 Supabase connection, push, merge or deployment is part of this checkpoint. `owner-demo`
 and all Phase 3 branches remain unchanged. Any publication/deployment requires approval.
+
+## Subsequent court orientation correction
+
+The original captures above retained the correct court positions but incorrect equal
+orientations. The [court correction QA](qa/phase-1.1/court-layout/REVIEW.md) and its
+new desktop/390 px screenshots supersede that geometry: Courts 3/4/5 portrait, Courts
+2/1 landscape below Court 5, correctly rotated markings. This correction is authorized
+for publication on the visual QA branch only; owner-demo is not merged or modified.

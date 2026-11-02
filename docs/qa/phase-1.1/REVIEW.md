@@ -1,6 +1,9 @@
 # Phase 1.1 visual QA — 2026-11-02
 
-Result: **local checks passed; ready for review, not published or deployed**.
+Historical Phase 1.1 snapshot. The subsequent [court orientation correction](court-layout/REVIEW.md)
+supersedes court geometry shown in this record; original screenshots are retained.
+
+Result at capture: **local checks passed; ready for review, not published or deployed**.
 Branch: `phase-1-1-visual-qa`, created from `owner-demo` at
 `1a9b04c262759ce62bf72573a86e3924c6809c48`. `owner-demo`, `work`, Phase 2 and Phase 3
 branch tips remain unchanged. No merge, push, Vercel project/deployment or production

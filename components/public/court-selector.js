@@ -31,7 +31,7 @@ export function CourtSelector({ club, courts, days, availability }) {
               {courts.map((item) => {
                 const status = getCourtStatus(getDemoSlots(availability, dayId, item.id));
                 const selected = item.id === courtId;
-                return <button key={item.id} className={`court-tile ${status} ${selected ? 'selected' : ''}`} style={{ '--court-row': item.row, '--court-column': item.column }} aria-label={`Court ${item.number}, ${statusLabels[status]}`} aria-pressed={selected} onClick={() => chooseCourt(item.id)}>
+                return <button key={item.id} className={`court-tile ${item.orientation} ${status} ${selected ? 'selected' : ''}`} style={{ '--court-row': item.row, '--court-column': item.column, '--court-span': item.columnSpan }} aria-label={`Court ${item.number}, ${statusLabels[status]}`} aria-pressed={selected} onClick={() => chooseCourt(item.id)}>
                   <span className="court-lines" aria-hidden="true"><span /><i /></span>
                   <span className="court-tile-label">COURT <strong>{String(item.number).padStart(2, '0')}</strong></span>
                   <span className="court-status"><span aria-hidden="true" />{statusLabels[status]}</span>
