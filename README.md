@@ -1,3 +1,7 @@
+> Owner demonstration branch: Phase 1 mock-only baseline. See
+> [Owner demo checkpoint](docs/OWNER-DEMO.md) for tests, limitations and Vercel authorization.
+> No guest booking, payment collection or Supabase configuration is required.
+
 # Rally Grounds
 
 Phase 1: a mobile-first public website, interactive mock court selector and read-only

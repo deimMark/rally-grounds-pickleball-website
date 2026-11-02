@@ -3,14 +3,16 @@
 ## Project and current authorization
 
 Build a single-club pickleball booking and management application for Rally Grounds,
-San Juan, La Union, Philippines. The user has authorized Phase 1 implementation: a public website, mock court selector,
-and read-only staff dashboard foundation. See `docs/PHASE-1.md` for the approved scope
-changes. Most architecture documents still describe later proposed features.
+San Juan, La Union, Philippines. This `owner-demo` branch starts from approved Phase 1
+checkpoint 753901cd3363a102d34c0cc77fbdcdfa2bde9a2b. Preserve its responsive mock-only
+public website, court selector and read-only synthetic dashboard. Do not merge Phase 2/3
+backend code, collect customer data, accept payments or require Supabase credentials.
+See docs/OWNER-DEMO.md for validation and the Vercel authorization checkpoint.
 
-Keep this phase mock-only: no live booking, payment verification, or calendar sync.
-Supabase is connection setup only; do not implement database schema or staff Auth yet.
-Do not deploy, push code, or create external resources without explicit approval.
-Local planning documents are authorized. Never commit credentials or real customer data.
+The user authorizes a separate Vercel Preview only when authenticated and permitted.
+Never use --prod, change the default branch, configure a domain/production service, or
+bypass account authorization/billing requirements. Stop before deployment if those are
+required. No Phase 3B work is authorized. Never commit credentials or real customer data.
 
 ## Stack and boundaries
 
