@@ -1,50 +1,7 @@
-import { before, beforeEach, after, test } from 'node:test';
+import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import { parseEnv } from 'node:util';
 import { randomUUID } from 'node:crypto';
-import pg from 'pg';
-import { createClient } from '@supabase/supabase-js';
-import { localSettings } from '../../scripts/local-settings.mjs';
-const settings = localSettings(); // Refuses any nonlocal administration target.
-const identities = parseEnv(readFileSync('.env.test.local', 'utf8'));
-const pool = new pg.Pool({ connectionString: settings.DB_URL, max: 25 });
-const clients = {};
-const court = (n) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
-const day = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10);
-const at = (hour) => new Date(`${day}T${String(hour).padStart(2, '0')}:00:00+08:00`).toISOString();
-async function rpc(who, name, params) {
-  if (name === 'create_reservation' && !Object.hasOwn(params, 'p_expected_versions')) {
-    if (who === 'anon') params = { ...params, p_expected_versions: {} };
-    else {
-      const quoted = await clients[who].rpc('quote_reservation', { p_court_id: params.p_court_id, p_start: params.p_start, p_end: params.p_end });
-      if (quoted.error) return quoted;
-      params = { ...params, p_expected_versions: quoted.data.version_context };
-    }
-  }
-  return clients[who].rpc(name, params);
-}
-function reservation(overrides = {}) {
-  return { p_court_id: court(1), p_start: at(8), p_end: at(9), p_players: 4, p_source: 'staff', p_request_key: randomUUID(), p_expected_total: 60000, p_hold_until: new Date(Date.now() + 3600000).toISOString(), ...overrides };
-}
-async function success(result) { const { data, error } = await result; assert.equal(error, null, error?.code + ': ' + error?.message); return data; }
-async function failure(result, code) { const { error } = await result; assert.ok(error, 'Expected rejection'); if (code) assert.equal(error.code, code); return error; }
-async function count(table) { return Number((await pool.query(`select count(*) from public.${table}`)).rows[0].count); }
-
-before(async () => {
-  clients.anon = createClient(settings.API_URL, settings.publicKey, { auth: { persistSession: false, autoRefreshToken: false } });
-  for (const who of ['owner', 'staff', 'inactive', 'outsider']) {
-    const client = createClient(settings.API_URL, settings.publicKey, { auth: { persistSession: false, autoRefreshToken: false } });
-    await success(client.auth.signInWithPassword({ email: identities[`TEST_${who.toUpperCase()}_EMAIL`], password: identities[`TEST_${who.toUpperCase()}_PASSWORD`] }));
-    clients[who] = client;
-  }
-});
-beforeEach(async () => {
-  await pool.query('truncate public.idempotency_requests,public.audit_events,public.court_occupancies,public.booking_items,public.booking_revisions,public.bookings,public.customers,public.court_config_versions,public.policy_versions,public.club_settings_versions,public.courts cascade');
-  await pool.query(readFileSync('supabase/seed.sql', 'utf8'));
-  await pool.query("update public.staff_profiles set active=true where user_id=$1", [identities.TEST_STAFF_ID]);
-});
-after(async () => { await pool.end(); });
+import { identities, pool, clients, court, day, at, rpc, reservation, success, failure, count, created } from './helpers.mjs';
 
 test('seed: five stable courts, Manila, integer centavos and explicit undecided values', async () => {
   assert.equal(await count('courts'), 5);
@@ -93,8 +50,8 @@ test('20 concurrent reservation attempts yield exactly one committed reservation
   for (const table of ['bookings', 'booking_revisions', 'booking_items', 'court_occupancies', 'idempotency_requests', 'audit_events']) assert.equal(await count(table), 1, table);
 });
 test('half-open adjacent reservations succeed while overlapping requests fail', async () => {
-  await success(rpc('staff', 'create_reservation', reservation()));
-  await success(rpc('staff', 'create_reservation', reservation({ p_start: at(9), p_end: at(10) })));
+  await created(rpc('staff', 'create_reservation', reservation()));
+  await created(rpc('staff', 'create_reservation', reservation({ p_start: at(9), p_end: at(10) })));
   await failure(rpc('staff', 'create_reservation', reservation({ p_start: at(8), p_end: at(10), p_expected_total: 120000 })), '23P01');
   assert.equal(await count('bookings'), 2);
 });
@@ -107,20 +64,20 @@ test('open play and maintenance share the database exclusion constraint', async 
   }
 });
 test('multi-court block rolls back earlier inserts and audits on later conflict', async () => {
-  await success(rpc('staff', 'create_reservation', reservation({ p_court_id: court(2) })));
+  await created(rpc('staff', 'create_reservation', reservation({ p_court_id: court(2) })));
   await failure(rpc('staff', 'block_courts', { p_court_ids: [court(1), court(2)], p_start: at(8), p_end: at(9), p_kind: 'maintenance', p_request_key: randomUUID() }), '23P01');
   assert.equal(await count('court_occupancies'), 1); assert.equal(await count('audit_events'), 1);
 });
 test('concurrent identical retries are idempotent and changed payload is rejected', async () => {
   const params = reservation();
   const results = await Promise.all(Array.from({ length: 20 }, () => rpc('staff', 'create_reservation', params)));
-  assert.ok(results.every((r) => !r.error)); assert.equal(new Set(results.map((r) => r.data.id)).size, 1);
+  assert.ok(results.every((r) => !r.error)); assert.equal(new Set(results.map((r) => r.data.receipt.id)).size, 1);
   await failure(rpc('staff', 'create_reservation', { ...params, p_players: 5 }), '22023');
-  const otherActor = await success(rpc('owner', 'create_reservation', { ...params, p_court_id: court(2) }));
-  assert.notEqual(otherActor.id, results[0].data.id); assert.equal(await count('bookings'), 2);
+  const otherActor = await created(rpc('owner', 'create_reservation', { ...params, p_court_id: court(2) }));
+  assert.notEqual(otherActor.id, results[0].data.receipt.id); assert.equal(await count('bookings'), 2);
 });
 test('expiry reads and racing release/create reconcile without resurrecting holds', async () => {
-  const old = await success(rpc('staff', 'create_reservation', reservation({ p_hold_until: new Date(Date.now() + 1800).toISOString() })));
+  const old = await created(rpc('staff', 'create_reservation', reservation({ p_hold_until: new Date(Date.now() + 1800).toISOString() })));
   await new Promise((resolve) => setTimeout(resolve, 1900));
   const rows = await success(rpc('anon', 'availability', { p_day: day }));
   assert.equal(rows.find((r) => r.court_id === court(1) && new Date(r.starts_at).toISOString() === at(8)).status, 'available');
@@ -130,15 +87,15 @@ test('expiry reads and racing release/create reconcile without resurrecting hold
   assert.equal((await pool.query('select status from public.bookings where id=$1', [old.id])).rows[0].status, 'expired');
 });
 test('release is idempotent, preserves agreements and cannot resurrect through retry', async () => {
-  const params = reservation(); const booking = await success(rpc('staff', 'create_reservation', params));
+  const params = reservation(); const booking = await created(rpc('staff', 'create_reservation', params));
   await success(rpc('staff', 'release_reservation', { p_booking_id: booking.id }));
   await success(rpc('staff', 'release_reservation', { p_booking_id: booking.id }));
-  await success(rpc('staff', 'create_reservation', params));
+  await created(rpc('staff', 'create_reservation', params));
   assert.equal(Number((await pool.query('select count(*) from public.court_occupancies where active')).rows[0].count), 0);
   assert.equal(await count('booking_revisions'), 1); assert.equal(await count('audit_events'), 2);
 });
 test('immediate and scheduled rates resolve at service time without rewriting agreements', async () => {
-  const booking = await success(rpc('staff', 'create_reservation', reservation()));
+  const booking = await created(rpc('staff', 'create_reservation', reservation()));
   const original = (await pool.query('select agreement from public.booking_revisions where booking_id=$1', [booking.id])).rows[0].agreement;
   await success(rpc('owner', 'publish_court_config', { p_court_id: court(1), p_effective: null, p_changes: { rate_centavos: 70000 }, p_note: 'Synthetic immediate rate' }));
   await success(rpc('owner', 'publish_court_config', { p_court_id: court(1), p_effective: at(9), p_changes: { rate_centavos: 90000 }, p_note: 'Synthetic scheduled rate' }));
@@ -150,7 +107,7 @@ test('immediate and scheduled rates resolve at service time without rewriting ag
   await assert.rejects(pool.query("update public.booking_revisions set agreement='{}' where booking_id=$1", [booking.id]), { code: '23514' });
 });
 test('contract policy snapshots are creation-time and remain immutable', async () => {
-  const booking = await success(rpc('staff', 'create_reservation', reservation()));
+  const booking = await created(rpc('staff', 'create_reservation', reservation()));
   await success(rpc('owner', 'publish_policy', { p_effective: null, p_changes: { guest_lead_minutes: 120 }, p_note: 'Synthetic immediate terms' }));
   const agreement = (await pool.query('select agreement from public.booking_revisions where booking_id=$1', [booking.id])).rows[0].agreement;
   assert.equal(agreement.policy.guest_lead_minutes, 60);
@@ -166,12 +123,12 @@ test('future policy versions do not activate early; duplicates and backdating fa
   await failure(rpc('owner', 'publish_policy', { ...params, p_effective: null, p_changes: { created_by: identities.TEST_STAFF_ID } }), '22023');
 });
 test('operational publication refuses disabling or closing an occupied court', async () => {
-  await success(rpc('staff', 'create_reservation', reservation()));
+  await created(rpc('staff', 'create_reservation', reservation()));
   for (const changes of [{ enabled: false }, { opening_minute: 600 }]) await failure(rpc('owner', 'publish_court_config', { p_court_id: court(1), p_effective: null, p_changes: changes, p_note: 'Would invalidate booking' }), '23514');
   assert.equal(await count('court_config_versions'), 5);
 });
 test('club settings are owner-only, versioned and protect occupied timezone changes', async () => {
-  await success(rpc('staff', 'create_reservation', reservation()));
+  await created(rpc('staff', 'create_reservation', reservation()));
   const params = { p_effective: null, p_name: 'Synthetic club', p_timezone: 'Asia/Manila', p_branding: { gold: '#D7AD6B' }, p_note: 'Synthetic brand' };
   await failure(rpc('staff', 'publish_club_settings', params), '42501');
   await success(rpc('owner', 'publish_club_settings', params));
@@ -199,7 +156,7 @@ test('RLS and grants deny anonymous/private access and direct app-role writes', 
   await failure(clients.staff.from('court_occupancies').insert({ court_id: court(1) }), '42501');
 });
 test('audit is append-only, owner-readable, atomic and contains no customer contact', async () => {
-  await success(rpc('staff', 'create_reservation', reservation()));
+  await created(rpc('staff', 'create_reservation', reservation()));
   assert.deepEqual(await success(clients.staff.from('audit_events').select('*')), []);
   const audits = await success(clients.owner.from('audit_events').select('*'));
   assert.equal(audits.length, 1); assert.equal(audits[0].actor_id, identities.TEST_STAFF_ID);
@@ -224,7 +181,7 @@ test('concurrent rate publication and creation cannot commit a stale price', asy
   ]);
   assert.equal(published.error, null);
   if (created.error) { assert.equal(created.error.code, '22023'); assert.equal(await count('bookings'), 0); }
-  else { assert.equal(created.data.total_centavos, 60000); assert.equal(await count('bookings'), 1); }
+  else { assert.equal(created.data.receipt.total_centavos, 60000); assert.equal(await count('bookings'), 1); }
 });
 test('policy resolver switches exactly at the scheduled activation instant', async () => {
   const id = await success(rpc('owner', 'publish_policy', { p_effective: at(8), p_changes: { guest_lead_minutes: 240 }, p_note: 'Boundary fixture' }));
@@ -258,7 +215,7 @@ test('price-only publication does not reject off-hours maintenance occupancy', a
   assert.equal((await success(rpc('staff', 'quote_reservation', { p_court_id: court(1), p_start: at(8), p_end: at(9) }))).total_centavos, 70000);
 });
 test('closure validation stops at a later restoration version before an existing booking', async () => {
-  await success(rpc('staff', 'create_reservation', reservation({ p_start: at(10), p_end: at(11) })));
+  await created(rpc('staff', 'create_reservation', reservation({ p_start: at(10), p_end: at(11) })));
   await success(rpc('owner', 'publish_court_config', { p_court_id: court(1), p_effective: at(10), p_changes: { enabled: true }, p_note: 'Restore at ten' }));
   await success(rpc('owner', 'publish_court_config', { p_court_id: court(1), p_effective: at(9), p_changes: { enabled: false }, p_note: 'One-hour closure before restored booking' }));
   await failure(rpc('staff', 'quote_reservation', { p_court_id: court(1), p_start: at(9), p_end: at(10) }), '23514');
@@ -267,7 +224,7 @@ test('closure validation stops at a later restoration version before an existing
   assert.equal(rows.filter((row) => row.court_id === court(1)).length, 14);
 });
 test('hours change validates just the affected segment of a spanning agreement', async () => {
-  const booking = await success(rpc('staff', 'create_reservation', reservation({ p_end: at(10), p_expected_total: 120000 })));
+  const booking = await created(rpc('staff', 'create_reservation', reservation({ p_end: at(10), p_expected_total: 120000 })));
   await success(rpc('owner', 'publish_court_config', { p_court_id: court(1), p_effective: at(9), p_changes: { opening_minute: 540 }, p_note: 'Nine AM opening effective at nine' }));
   await success(rpc('staff', 'quote_reservation', { p_court_id: court(1), p_start: at(8), p_end: at(10) }));
   assert.equal((await pool.query('select total_centavos from public.bookings where id=$1', [booking.id])).rows[0].total_centavos, 120000);
@@ -277,7 +234,7 @@ test('creation rejects stale agreed policies even when the quoted total is uncha
   await success(rpc('owner', 'publish_policy', { p_effective: null, p_changes: { no_refund_within_minutes: 2880 }, p_note: 'Synthetic changed terms, same rental price' }));
   await failure(rpc('staff', 'create_reservation', reservation({ p_expected_versions: quoted.version_context })), '22023');
   assert.equal(await count('bookings'), 0);
-  await success(rpc('staff', 'create_reservation', reservation()));
+  await created(rpc('staff', 'create_reservation', reservation()));
 });
 test('missing accepted versions and the old RPC signature cannot bypass agreement checks', async () => {
   await failure(rpc('staff', 'create_reservation', reservation({ p_expected_versions: null })), '22023');
