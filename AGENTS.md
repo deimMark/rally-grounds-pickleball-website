@@ -9,7 +9,10 @@ are authorized on phase-3b2-guest-reservations, from reviewed checkpoint
 Use additive migrations, synthetic local policy/contact fixtures and narrow server-only
 capability gateways. Preserve staff Auth/RLS, agreements, occupancy constraints and mock UI.
 No live policy defaults, public ingress, payments, notifications, production resources,
-merge, deployment or push. Disable Vercel Git deployment for this branch. Autonomous
+merge or deployment. The current security review authorizes a normal push of this
+branch only after no unresolved critical/high finding, passing checks and a clean tree.
+Preserve runtime/schema; add review documentation/tests. Disable Vercel Git deployment
+for this branch. Do not begin Phase 3B.3. Autonomous
 expiry scheduling remains Phase 3B.3. Record actual test evidence and stop for review.
 Never commit credentials or real customer data.
 

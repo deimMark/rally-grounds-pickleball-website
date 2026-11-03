@@ -114,3 +114,10 @@ no inverse intent/limiter locking, expiry/create/read/release races, ≤60-secon
 release, restart/outage/heartbeat monitoring and audited retention that preserves bound
 agreements/receipts. Keep owner policy, contact/privacy/recovery and public hosting gates
 open. Do not add payments or enable public guest booking as part of that recommendation.
+
+## Subsequent adversarial review
+
+See [SECURITY-REVIEW.md](SECURITY-REVIEW.md) for the later controlled publication gate,
+additional failure/restart probes, two documented non-blocking defects and actual
+99 DB / 112 unit / 40 browser test counts. The historical implementation results above
+remain unchanged; the review does not implement the proposed corrections or Phase 3B.3.

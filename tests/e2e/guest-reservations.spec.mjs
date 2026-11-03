@@ -1,7 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { randomUUID, createHash } from 'node:crypto';
+import { randomUUID, createHash, createHmac } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import pg from 'pg';
+import { spawn } from 'node:child_process';
+import { once } from 'node:events';
+import { createClient } from '@supabase/supabase-js';
+import { normalizeGuestReservation } from '../../lib/domain/guest-reservation.js';
 import { localSettings } from '../../scripts/local-settings.mjs';
 const settings=localSettings();const pool=new pg.Pool({connectionString:settings.DB_URL});
 const origin=`http://127.0.0.1:${process.env.TEST_PORT || 3000}`;const headers={origin};
@@ -83,4 +87,60 @@ test('changed idempotency input conflicts without creating another booking',asyn
  const p=await prepare(request);await reserve(request,p);
  const r=await reserve(request,p,{...p.body,estimatedPlayers:5});expect(r.status()).toBe(409);expect(await r.json()).toEqual({error:'REQUEST_MISMATCH'});
  const newKey=await reserve(request,{...p,key:randomUUID()});expect(newKey.status()).toBe(409);expect(await newKey.json()).toEqual({error:'INTENT_ALREADY_BOUND'});
+});
+
+test('review: actual browser GET omits Origin and cannot yet use the private-read contract',async({page,context})=>{
+ const p=await prepare(context.request);const created=await(await reserve(context.request,p)).json();await page.goto('/');
+ const result=await page.evaluate(async({ref,intentId})=>{
+  const response=await fetch(`/api/guest-reservations/${ref}`,{headers:{'x-guest-intent':intentId}});
+  return {status:response.status,body:await response.json()};
+ },{ref:created.receipt.reference,intentId:p.body.intentId});
+ // Documents an existing local API/browser handoff limitation; no security check is relaxed.
+ expect(result).toEqual({status:404,body:{error:'ACCESS_UNAVAILABLE'}});
+ expect((await status(context.request,p,created.receipt.reference)).status()).toBe(200);
+});
+async function reviewServer(port) {
+ const url=`http://127.0.0.1:${port}`;let logs='';
+ const child=spawn(process.execPath,['node_modules/next/dist/bin/next','start','--hostname','127.0.0.1','--port',String(port)],{env:{...process.env,APP_ORIGIN:url},stdio:['ignore','pipe','pipe']});
+ child.stdout.on('data',chunk=>{logs+=chunk;});child.stderr.on('data',chunk=>{logs+=chunk;});
+ const stop=async()=>{if(child.exitCode===null&&child.signalCode===null){const exited=once(child,'exit');child.kill('SIGTERM');await exited;}};
+ try {
+  for(let i=0;i<100;i++){
+   try{if((await fetch(url,{signal:AbortSignal.timeout(500)})).ok)return{url,stop,logs:()=>logs};}catch{}
+   if(child.exitCode!==null)break;await new Promise(resolve=>setTimeout(resolve,100));
+  }
+  throw new Error('Review server failed to start');
+ }catch(error){await stop();throw error;}
+}
+test('review: a pending admitted HTTP payload survives real Next process restarts without leaking inputs',async({request})=>{
+ const p=await prepare(request);const cookies=(await request.storageState()).cookies;
+ const credential=cookies.find(c=>c.name===`rg-intent-${p.body.intentId}`).value;
+ const fingerprint=createHmac('sha256',Buffer.from(credential,'base64url')).update(JSON.stringify(normalizeGuestReservation(p.body))).digest('hex');
+ const row=(await pool.query('select credential_hash,network_key from private.guest_intents where id=$1',[p.body.intentId])).rows[0];
+ const key=(await pool.query('select key_fingerprint from private.guest_security_config')).rows[0].key_fingerprint;
+ const gateway=createClient(settings.API_URL,settings.adminKey,{auth:{persistSession:false,autoRefreshToken:false}});
+ const admitted=await gateway.rpc('guest_request_admit',{p_id:p.body.intentId,p_hash:row.credential_hash,p_network_key:row.network_key,p_key_fingerprint:key,p_request_key:p.key,p_fingerprint:fingerprint});
+ expect(admitted.error).toBe(null);expect(admitted.data.outcome).toBe('admitted');
+ expect((await pool.query('select count(*) from public.bookings')).rows[0].count).toBe('0');
+ // Start and stop before recovery, then restart again after the committed response.
+ let server=await reviewServer(3197);await server.stop();server=await reviewServer(3197);
+ const outputs=[];
+ try {
+  const first=await request.post(server.url+'/api/guest-reservations',{headers:{origin:server.url,'idempotency-key':p.key},data:p.body});expect(first.status()).toBe(201);const receipt=(await first.json()).receipt;
+  outputs.push(server.logs());await server.stop();server=await reviewServer(3197);
+  const replay=await request.post(server.url+'/api/guest-reservations',{headers:{origin:server.url,'idempotency-key':p.key},data:p.body});expect(replay.status()).toBe(200);expect((await replay.json()).receipt).toEqual(receipt);
+  expect((await pool.query('select count(*) from public.bookings')).rows[0].count).toBe('1');
+  outputs.push(server.logs());
+  for(const secret of [credential,row.credential_hash,fingerprint,process.env.SUPABASE_GUEST_SERVICE_KEY,process.env.GUEST_RATE_HMAC_KEY,p.body.guest.name,p.body.guest.contact.value])expect(outputs.some(text=>text.includes(secret))).toBe(false);
+ } finally {await server.stop();}
+});
+
+test('review: database rejects UUID arrays accepted by permissive JavaScript normalization',async({request})=>{
+ const p=await prepare(request);
+ const quote=await request.post('/api/quotes',{headers,data:{intentId:[p.body.intentId],courtId:court(1),startsAt:at(8),durationMinutes:60}});
+ expect(quote.status()).toBe(400);expect(await quote.json()).toEqual({error:'INVALID_REQUEST'});
+ const response=await reserve(request,p,{...p.body,quoteId:[p.body.quoteId]});expect(response.status()).toBe(400);expect(await response.json()).toEqual({error:'INVALID_REQUEST'});
+ expect((await pool.query('select count(*) from public.bookings')).rows[0].count).toBe('0');
+ expect((await pool.query('select count(*) from public.customers')).rows[0].count).toBe('0');
+ expect((await pool.query('select count(*) from private.guest_booking_requests where booking_id is null')).rows[0].count).toBe('1');
 });
