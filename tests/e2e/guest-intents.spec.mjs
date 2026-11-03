@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
+import { createServer } from 'node:http';
 import { once } from 'node:events';
 import pg from 'pg';
 import { localSettings } from '../../scripts/local-settings.mjs';
@@ -102,4 +103,41 @@ test('HTTP quota persists across real service restarts and errors do not log sec
   const response=await fetch(invalid.url+endpoint,{method:'POST',headers:{origin:invalid.url,'content-type':'application/json'},body:'{}'});
   expect(response.status).toBe(503);
  } finally {await invalid.stop();}
+});
+
+
+test('crafted gateway fields cannot select an actor, function or credential',async({request})=>{
+ const payloads=[
+  '{"p_actor_id":"00000000-0000-4000-8000-000000000001"}',
+  '{"function":"create_reservation","scope":"staff"}',
+  '{"credential":"synthetic-forged-value","credential_hash":"synthetic"}',
+  '{"__proto__":{"scope":"owner"}}',
+  '{"constructor":{"prototype":{"scope":"owner"}}}',
+ ];
+ for(const data of payloads)expect((await request.post(endpoint,{headers,data})).status()).toBe(400);
+ expect((await request.post(endpoint,{headers:{...headers,'content-encoding':'gzip'},data:'{}'})).status()).toBe(400);
+ const chunked=new ReadableStream({start(controller){controller.enqueue(new TextEncoder().encode(' '.repeat(513)+'{}'));controller.close();}});
+ const bounded=await fetch(origin+endpoint,{method:'POST',headers,body:chunked,duplex:'half'});
+ expect(bounded.status).toBe(400);
+
+ expect((await pool.query('select count(*) from private.guest_intents')).rows[0].count).toBe('0');
+ expect((await pool.query('select count(*) from private.guest_rate_buckets')).rows[0].count).toBe('0');
+});
+
+test('a real browser on another origin cannot admit intents through JSON or simple POST',async({page})=>{
+ const attacker=createServer((_request,response)=>{response.writeHead(200,{'content-type':'text/html'});response.end('<!doctype html><title>Synthetic alternate origin</title>');});
+ const listening=once(attacker,'listening');attacker.listen(0,'127.0.0.1');await listening;
+ try {
+  await page.goto(`http://127.0.0.1:${attacker.address().port}`);
+  const results=await page.evaluate(async(url)=>{
+   let json;
+   try {await fetch(url,{method:'POST',credentials:'include',headers:{'content-type':'application/json'},body:'{}'});json='allowed';}catch{json='blocked';}
+   const simple=await fetch(url,{method:'POST',mode:'no-cors',credentials:'include',headers:{'content-type':'text/plain'},body:'{}'});
+   return {json,simple:simple.type};
+  },origin+endpoint);
+  expect(results.json).toBe('blocked');expect(results.simple).toBe('opaque');
+  expect((await pool.query('select count(*) from private.guest_intents')).rows[0].count).toBe('0');
+ } finally {
+  await page.goto('about:blank');attacker.closeAllConnections();await new Promise(resolve=>attacker.close(resolve));
+ }
 });

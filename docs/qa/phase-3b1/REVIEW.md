@@ -103,3 +103,10 @@ and autonomous expiry. No live payment workflow or public launch is authorized h
 - Documentation: `AGENTS.md`, `README.md`, `docs/README.md`, `docs/ARCHITECTURE.md`,
   `docs/ROADMAP.md`, `docs/DECISIONS-AND-RISKS.md`, `docs/PHASE-3B-CONTRACTS.md`,
   `docs/PHASE-3B1.md` and this report.
+
+
+## Subsequent security/publication review
+
+The [adversarial review](SECURITY-REVIEW.md) preserves the implementation above and adds
+independent bypass regressions and publication safeguards. Its current validation counts
+supersede this historical implementation run; residual/live-readiness gates remain.

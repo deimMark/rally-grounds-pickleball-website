@@ -13,8 +13,11 @@ Preserve staff Auth, booking functions, agreements, constraints and the public m
 No guest reservation creation, customer contact collection, payments, uploads or public
 launch. Use additive migrations and synthetic local configuration; no invented live
 TTL/limits or unresolved commercial defaults. Do not modify owner-demo, Vercel or Phase 3A
-branch tips. Do not merge, push, deploy or create external resources. Save small local
-commits and report actual test evidence. Never commit credentials or real customer data.
+branch tips. The current security review authorizes publishing this branch only if no unresolved
+critical/high defect is found. Preserve the reviewed runtime/schema; add review evidence
+and the branch-specific Vercel Git deployment opt-out. Do not merge, deploy, create
+external resources or begin Phase 3B.2. Keep owner-demo and Vercel project settings
+unchanged. Report actual test evidence and stop for independent review. Never commit credentials or real customer data.
 
 ## Stack and boundaries
 
