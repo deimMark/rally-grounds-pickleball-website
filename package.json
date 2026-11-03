@@ -21,7 +21,8 @@
     "db:staff": "node scripts/bootstrap-local-staff.mjs",
     "test:integration": "node --test --test-concurrency=1 tests/integration/*.test.mjs",
     "db:migrate": "node scripts/local-supabase.mjs migrate",
-    "check:secrets": "node scripts/check-secrets.mjs"
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "db:guest": "node scripts/bootstrap-local-guest.mjs"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "5.3.0",

@@ -3,15 +3,18 @@
 ## Project and current authorization
 
 Build a single-club pickleball booking and management application for Rally Grounds,
-San Juan, La Union, Philippines. Phase 3A is authorized on a dedicated branch from
-reviewed Phase 2 HEAD 1e173f31db6c35c143f5637e365918b721c8f825: fix duration
-consistency, authoritative staff booking status and safe court-block release. Prepare
-Phase 3B contracts only; do not implement guest capabilities, guest endpoints, payment
-collection or the full guest flow. Preserve existing agreements and the mock public UI.
-Use additive migrations, synthetic fixtures and small logical local commits. Report
-actual test outcomes and unresolved risks in docs/PHASE-3A.md and its QA record.
-Do not deploy, push code, or create external resources without explicit approval.
-Local planning documents are authorized. Never commit credentials or real customer data.
+San Juan, La Union, Philippines. Phase 3B.1 local guest security is authorized on
+phase-3b-guest-security, from reviewed Phase 3A commit
+3e9a94c724f430bab9df4bd7107dfae659966cf4. Implement private guest intents, secure
+server admission, scoped capability checks and durable local abuse limits only.
+See docs/PHASE-3B-CONTRACTS.md, docs/PHASE-3B1.md and its QA report.
+
+Preserve staff Auth, booking functions, agreements, constraints and the public mock UI.
+No guest reservation creation, customer contact collection, payments, uploads or public
+launch. Use additive migrations and synthetic local configuration; no invented live
+TTL/limits or unresolved commercial defaults. Do not modify owner-demo, Vercel or Phase 3A
+branch tips. Do not merge, push, deploy or create external resources. Save small local
+commits and report actual test evidence. Never commit credentials or real customer data.
 
 ## Stack and boundaries
 

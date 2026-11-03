@@ -1,0 +1,10 @@
+{
+  "purpose": "synthetic_local_only",
+  "create_ttl_seconds": 300,
+  "access_ttl_seconds": 900,
+  "window_seconds": 60,
+  "max_requests": 5,
+  "max_active_intents": 5,
+  "max_cookie_count": 5,
+  "retention_seconds": 3600
+}

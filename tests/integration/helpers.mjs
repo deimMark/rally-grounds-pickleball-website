@@ -40,7 +40,7 @@ before(async () => {
   }
 });
 beforeEach(async () => {
-  await pool.query('truncate public.idempotency_requests,public.audit_events,public.court_occupancies,public.booking_items,public.booking_revisions,public.bookings,public.customers,public.court_config_versions,public.policy_versions,public.club_settings_versions,public.courts cascade');
+  await pool.query('truncate private.guest_rate_buckets,private.guest_intents,public.idempotency_requests,public.audit_events,public.court_occupancies,public.booking_items,public.booking_revisions,public.bookings,public.customers,public.court_config_versions,public.policy_versions,public.club_settings_versions,public.courts cascade');
   await pool.query(readFileSync('supabase/seed.sql', 'utf8'));
   await pool.query("update public.staff_profiles set active=true where user_id=$1", [identities.TEST_STAFF_ID]);
 });
