@@ -1,3 +1,7 @@
+Current local backend milestone: [Phase 3B.1](PHASE-3B1.md) and
+[QA](qa/phase-3b1/REVIEW.md). Intent security only; no guest reservation/public launch.
+The historical roadmap records below remain context for later work.
+
 # Rally Grounds MVP plan
 
 Status: Phase 1 is approved; Phase 2 local database/Auth foundations and Phase 3A

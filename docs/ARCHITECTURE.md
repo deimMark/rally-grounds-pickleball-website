@@ -1,5 +1,9 @@
 # Proposed MVP architecture
 
+Current local access subset: [Phase 3B.1](PHASE-3B1.md), private guest intents and
+server admission with durable synthetic abuse limits. The remaining guest modules below
+are proposals; this milestone does not implement real guest reservations.
+
 Phase 1 remains the approved baseline. Phase 2 implementation now follows
 [PHASE-2.md](PHASE-2.md), including real local database/Auth foundations. Public booking,
 payment workflows and the remaining live modules below are still later-phase work.

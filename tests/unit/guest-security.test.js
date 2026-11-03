@@ -50,3 +50,10 @@ describe('Next internal URL handling',()=>{
   expect(trustedGuestRequest(new Request(url,{headers:{origin:env.APP_ORIGIN}}),guestConfiguration(env))).toBe(false);
  });
 });
+
+it('rejects encoded bodies and oversized declared lengths before parsing',async()=>{
+ for(const extra of [{'content-encoding':'gzip'},{'content-length':'513'},{'content-length':'invalid'}]) {
+  const request=new Request(env.APP_ORIGIN,{method:'POST',headers:{'content-type':'application/json',...extra},body:'{}'});
+  expect(await emptyGuestBody(request)).toBe(false);
+ }
+});

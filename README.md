@@ -1,5 +1,10 @@
 # Rally Grounds
 
+Phase 3B.1 is a **local-only** guest security milestone. See
+[implementation](docs/PHASE-3B1.md) and [QA](docs/qa/phase-3b1/REVIEW.md).
+Guest admission is off by default; no real guest booking or public launch is enabled.
+Run `npm run db:guest` only for the designated local synthetic environment.
+
 A single-club pickleball application foundation for San Juan, La Union. Phase 1 is the
 approved visual baseline; Phase 2 adds a local Supabase database, secure staff access,
 versioned policies and tested reservation/availability services. The public selector and

@@ -82,3 +82,13 @@ rows. Guest capability authorization, public contact collection, durable shared 
 limits and the privileged guest gateway remain proposals in
 [Phase 3B contracts](PHASE-3B-CONTRACTS.md). No guest privacy/booking launch claim follows
 from the staff-only tests. Owner policy/retention/abuse-budget approvals remain open.
+
+## Phase 3B.1 local security checkpoint
+
+[Phase 3B.1](PHASE-3B1.md) adds local-only guest intent admission, hash-only per-intent
+capabilities, scoped internal authorization, owner revocation and persistent admission
+budgets. [QA](qa/phase-3b1/REVIEW.md) records actual tests. Commercial/owner defaults
+remain unresolved; synthetic TTLs/limits are not club policy. Guest quotes, reservation
+creation, contact/status flow, autonomous expiry/cleanup and trusted public attribution
+remain unimplemented. Privileged service-key isolation, live rate-limit key rotation,
+retention and missing policy decisions must be reviewed before Phase 3B.2/live admission.

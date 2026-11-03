@@ -1,5 +1,9 @@
 # Milestone-based implementation roadmap
 
+Local subset update: [Phase 3B.1](PHASE-3B1.md) implements guest intent security only.
+See its [QA](qa/phase-3b1/REVIEW.md); guest booking, privacy/status flow and autonomous
+expiry remain future work requiring separate authorization.
+
 Status: Phase 1 is approved; Phase 2 foundations and the authorized Phase 3A
 corrections are implemented locally. See [Phase 3A](PHASE-3A.md) and its
 [QA](qa/phase-3a/REVIEW.md). The full guest workflow is still proposed in

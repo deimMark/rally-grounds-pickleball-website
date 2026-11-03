@@ -1,9 +1,11 @@
 # Phase 3B proposed guest booking contracts
 
-Status: **implementation-ready proposal for review, not implemented by Phase 3A**.
-No guest endpoint, capability, contact form or rate limiter described here exists yet.
-The current public selector remains mock-only. Staff Auth and Phase 3A RPCs are real
-local foundations, not evidence that real guest bookings already work.
+Status: **full-flow proposal with the local Phase 3B.1 intent subset implemented**.
+See [Phase 3B.1](PHASE-3B1.md) and [QA](qa/phase-3b1/REVIEW.md) for actual evidence.
+Only local intent admission, private capabilities and durable local admission budgets
+exist. Remaining quote/reservation/status/contact/expiry contracts below are proposed,
+not implemented. The public selector is still mock-only; no real guest bookings work.
+Local synthetic technical intents do not waive the live policy-readiness gate below.
 
 ## 1. Admission and policy readiness
 
