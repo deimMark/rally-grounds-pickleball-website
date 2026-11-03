@@ -1,7 +1,7 @@
 # Rally Grounds
 
-Phase 3B.1 is a **local-only** guest security milestone. See
-[implementation](docs/PHASE-3B1.md) and [QA](docs/qa/phase-3b1/REVIEW.md).
+Phase 3B.2 adds **local-only synthetic unpaid guest holds**. See
+[implementation](docs/PHASE-3B2.md) and [QA](docs/qa/phase-3b2/REVIEW.md).
 Guest admission is off by default; no real guest booking or public launch is enabled.
 Run `npm run db:guest` only for the designated local synthetic environment.
 
@@ -24,9 +24,10 @@ npm run db:staff
 npm run dev
 ```
 
-The app listens on `0.0.0.0:3000`. `/` is the public demo, `/staff/login` is staff sign-in,
-and `/staff` requires a validated active staff/owner account. Use a supported cloud
-port-viewing mechanism if available; no deployment is performed by these commands.
+This development branch binds to `127.0.0.1:3000`. Do not publicly forward it with
+the synthetic guest endpoints enabled. `/` is the public demo, `/staff/login` is staff sign-in,
+and `/staff` requires a validated active staff/owner account. Use loopback access for guest API testing; the owner-demo deployment stays separate.
+No deployment is performed by these commands.
 Live database/app processes must be restarted in a new cloud session.
 
 The local-only helpers create ignored `.env.local` connection settings and
@@ -51,8 +52,11 @@ npm run check:secrets
 # DESTRUCTIVE to this designated local synthetic database; never use for real records:
 npm run db:reset
 npm run db:staff
+npm run db:guest
 npm run test:integration
+npm run db:guest
 npm run build
+npm run check:client-secrets
 # Existing cloud Chromium; port 3100 avoids the development server on port 3000:
 TEST_PORT=3100 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e
 ```
@@ -83,14 +87,18 @@ is not executed until a separately authorized push/publication.
 
 All introduced tables have deny-by-default RLS and explicit grants. Active staff/owner
 roles come from the database, not client claims. Customer/audit records are owner-only
-in this foundation. No public mutation endpoint, payment workflow or customer API exists.
+in this foundation. The new capability-scoped local APIs create synthetic unpaid holds
+only; no live booking, payment workflow or public customer listing exists.
 Configuration is versioned; agreement snapshots and audit history are immutable.
 
 Supabase configuration stays server-side. `.env.example` contains names only plus a
 nonsecret local origin. Only publishable keys are accepted by the application factory;
-service-role/admin credentials are confined to guarded local setup helpers.
+service-role credentials are confined to guarded local setup and server-only guest
+gateways. They remain broadly privileged and must never enter browser code or logs.
 
 ## Review records
+
+- [Phase 3B.2 local holds](docs/PHASE-3B2.md), [QA](docs/qa/phase-3b2/REVIEW.md)
 
 - [Phase 3A changes](docs/PHASE-3A.md), [QA](docs/qa/phase-3a/REVIEW.md), [proposed Phase 3B contracts](docs/PHASE-3B-CONTRACTS.md)
 - [Phase 2 implementation and operations](docs/PHASE-2.md)

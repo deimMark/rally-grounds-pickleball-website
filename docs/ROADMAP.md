@@ -1,18 +1,12 @@
 # Milestone-based implementation roadmap
 
-Local subset update: [Phase 3B.1](PHASE-3B1.md) implements guest intent security only.
-See its [QA](qa/phase-3b1/REVIEW.md); guest booking, privacy/status flow and autonomous
-expiry remain future work requiring separate authorization.
-
-Status: Phase 1 is approved; Phase 2 foundations and the authorized Phase 3A
-corrections are implemented locally. See [Phase 3A](PHASE-3A.md) and its
-[QA](qa/phase-3a/REVIEW.md). The full guest workflow is still proposed in
-[Phase 3](PHASE-3-PLAN.md) and [Phase 3B contracts](PHASE-3B-CONTRACTS.md).
-The revised Phase 1 record remains in [PHASE-1.md](PHASE-1.md), including the
-Court 1 below Court 2 layout. The original milestone definitions below are retained
-for traceability; their proposed checks are not claims of completed later phases.
-Each gate requires recorded results and known limitations. No Phase 3B implementation,
-push, merge, deployment or production provisioning is currently authorized.
+Local subset update: [Phase 3B.2](PHASE-3B2.md) implements synthetic local guest
+quotes, unpaid holds, durable idempotency and bound private status. Phase 3B.1 security,
+Phase 2/3A foundations and all prior agreements remain preserved. Public UI remains mock.
+See [QA](qa/phase-3b2/REVIEW.md); no public launch, payments, push, deployment or merge is
+authorized. Phase 3B.3 is proposed for autonomous expiry/retention and operational races,
+not implemented here. Owner policy decisions remain gates for live booking.
+The original milestones below remain for traceability, not claims of later completion.
 
 ## Phase 0 — Architecture and owner review (completed planning)
 

@@ -92,3 +92,19 @@ remain unresolved; synthetic TTLs/limits are not club policy. Guest quotes, rese
 creation, contact/status flow, autonomous expiry/cleanup and trusted public attribution
 remain unimplemented. Privileged service-key isolation, live rate-limit key rotation,
 retention and missing policy decisions must be reviewed before Phase 3B.2/live admission.
+
+## Phase 3B.2 local checkpoint
+
+[Phase 3B.2](PHASE-3B2.md) implements capability-scoped synthetic local quotes, atomic
+unpaid holds, private customer associations, durable keyed request admission and bound
+status. Earlier statements that all guest mutations are unimplemented are historical;
+public UI/contact/booking launch remains unimplemented. Every commercial/security value
+is explicit synthetic local configuration, not owner approval. Partial refunds stay null.
+
+Only example.invalid email contacts are accepted; no phone parser, contact verification,
+history merging, recovery or notifications. Lost/expired capabilities cannot be recovered
+by reference or contact. Service-key isolation and public proxy/rate/rotation concerns from
+3B.1 remain. Retention markers do not clean immutable quotes/requests. Phase 3B.3 must
+add bounded audited cleanup and scheduler races/monitoring under the existing lock order,
+preserving booking agreements and receipts. No public ingress, production resources,
+payments, push, merge or deployment is authorized by this local milestone.

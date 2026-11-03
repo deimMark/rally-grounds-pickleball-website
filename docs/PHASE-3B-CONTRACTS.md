@@ -1,11 +1,11 @@
 # Phase 3B proposed guest booking contracts
 
-Status: **full-flow proposal with the local Phase 3B.1 intent subset implemented**.
-See [Phase 3B.1](PHASE-3B1.md) and [QA](qa/phase-3b1/REVIEW.md) for actual evidence.
-Only local intent admission, private capabilities and durable local admission budgets
-exist. Remaining quote/reservation/status/contact/expiry contracts below are proposed,
-not implemented. The public selector is still mock-only; no real guest bookings work.
-Local synthetic technical intents do not waive the live policy-readiness gate below.
+Status: **full-flow contracts with a synthetic local Phase 3B.2 subset implemented**.
+See [Phase 3B.2](PHASE-3B2.md) and [QA](qa/phase-3b2/REVIEW.md) for actual implementation
+scope/evidence. Local intents, quotes, unpaid holds, scoped idempotency and private status
+exist; no public guest UI, live contact collection or autonomous scheduler exists. The
+public selector is mock-only. Local policy/security fixtures do not waive owner approval
+or live-readiness gates below. Earlier Phase 3B.1 reports remain historical evidence.
 
 ## 1. Admission and policy readiness
 

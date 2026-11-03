@@ -13,7 +13,7 @@ const endpoint='/api/guest-intents';
 const headers={origin,'content-type':'application/json'};
 test.describe.configure({mode:'serial'});
 test.beforeEach(async()=>{
- await pool.query('truncate private.guest_intents,private.guest_rate_buckets');
+ await pool.query('truncate private.guest_intents,private.guest_rate_buckets cascade');
  await pool.query(`update private.guest_security_config set enabled=true,create_ttl_seconds=300,access_ttl_seconds=900,
  window_seconds=86400,max_requests=5,max_active_intents=5,max_cookie_count=5,retention_seconds=86400,key_fingerprint=$1`,
  [createHash('sha256').update(Buffer.from(process.env.GUEST_RATE_HMAC_KEY,'hex')).digest('hex')]);

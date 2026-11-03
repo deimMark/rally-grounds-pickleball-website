@@ -1,15 +1,12 @@
 # Proposed MVP architecture
 
-Current local access subset: [Phase 3B.1](PHASE-3B1.md), private guest intents and
-server admission with durable synthetic abuse limits. The remaining guest modules below
-are proposals; this milestone does not implement real guest reservations.
-
-Phase 1 remains the approved baseline. Phase 2 implementation now follows
-[PHASE-2.md](PHASE-2.md), including real local database/Auth foundations. Public booking,
-payment workflows and the remaining live modules below are still later-phase work.
-Phase 3A adds the service contracts in [PHASE-3A.md](PHASE-3A.md): selected-duration
-availability, immutable receipt/current-state separation and safe block release.
-[Phase 3B contracts](PHASE-3B-CONTRACTS.md) are proposed, not implemented.
+Current local subset: [Phase 3B.2](PHASE-3B2.md) adds capability-scoped quotes,
+atomic unpaid guest holds and private bound status to the reviewed Phase 3B.1 security
+foundation. Only synthetic loopback development is authorized. The public UI stays mock;
+no guest UI, payment collection, production connection or scheduler is implemented.
+See its [QA](qa/phase-3b2/REVIEW.md) and the full [contracts](PHASE-3B-CONTRACTS.md).
+Phase 2/3A staff foundations and prior immutable agreements remain preserved. Original
+architecture proposals below remain future work unless separately recorded as tested.
 
 ## Application shape
 

@@ -25,6 +25,7 @@ jobs:
       - run: npm run test:integration
       - run: npm run db:guest
       - run: npm run build
+      - run: npm run check:client-secrets
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - run: npm run db:stop
