@@ -193,3 +193,10 @@ Supabase connection, paid resource, real customer data or payment action. Publis
 this development branch must not move default/owner-demo or Phase 2/3A/3B.1 tips.
 Remote HEAD and GitHub Actions are checked after push and reported in delivery output;
 this report does not pre-claim hosted CI or deployment results.
+
+## Subsequent R1/R2 correction checkpoint
+
+[Phase 3B.2.1](../../PHASE-3B2-1.md) corrects the original R1 browser GET trust and R2
+UUID coercion defects on a separate local branch; see its [QA](../phase-3b2-1/REVIEW.md).
+The findings and counts above are preserved as historical evidence. R3–R5 live-readiness
+gates remain; no expiry worker or public launch is implemented by these corrections.

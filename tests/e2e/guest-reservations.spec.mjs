@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import pg from 'pg';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
+import { createServer } from 'node:http';
 import { createClient } from '@supabase/supabase-js';
 import { normalizeGuestReservation } from '../../lib/domain/guest-reservation.js';
 import { localSettings } from '../../scripts/local-settings.mjs';
@@ -89,14 +90,17 @@ test('changed idempotency input conflicts without creating another booking',asyn
  const newKey=await reserve(request,{...p,key:randomUUID()});expect(newKey.status()).toBe(409);expect(await newKey.json()).toEqual({error:'INTENT_ALREADY_BOUND'});
 });
 
-test('review: actual browser GET omits Origin and cannot yet use the private-read contract',async({page,context})=>{
+test('R1: real same-origin browser GET succeeds without supplying Origin',async({page,context})=>{
  const p=await prepare(context.request);const created=await(await reserve(context.request,p)).json();await page.goto('/');
+ const sent=page.waitForRequest(r=>r.method()==='GET'&&r.url().includes('/api/guest-reservations/'));
  const result=await page.evaluate(async({ref,intentId})=>{
   const response=await fetch(`/api/guest-reservations/${ref}`,{headers:{'x-guest-intent':intentId}});
   return {status:response.status,body:await response.json()};
  },{ref:created.receipt.reference,intentId:p.body.intentId});
- // Documents an existing local API/browser handoff limitation; no security check is relaxed.
- expect(result).toEqual({status:404,body:{error:'ACCESS_UNAVAILABLE'}});
+ const sentHeaders=await(await sent).allHeaders();expect(sentHeaders.origin).toBeUndefined();expect(sentHeaders['sec-fetch-site']).toBe('same-origin');
+ expect(result.status).toBe(200);expect(result.body.receipt).toEqual(created.receipt);
+ expect(result.body.current.status).toBe('held');
+ expect(JSON.stringify(result).includes(p.body.guest.contact.value)).toBe(false);
  expect((await status(context.request,p,created.receipt.reference)).status()).toBe(200);
 });
 async function reviewServer(port) {
@@ -135,12 +139,109 @@ test('review: a pending admitted HTTP payload survives real Next process restart
  } finally {await server.stop();}
 });
 
-test('review: database rejects UUID arrays accepted by permissive JavaScript normalization',async({request})=>{
+test('R2: UUID arrays are rejected before durable request admission',async({request})=>{
  const p=await prepare(request);
  const quote=await request.post('/api/quotes',{headers,data:{intentId:[p.body.intentId],courtId:court(1),startsAt:at(8),durationMinutes:60}});
  expect(quote.status()).toBe(400);expect(await quote.json()).toEqual({error:'INVALID_REQUEST'});
  const response=await reserve(request,p,{...p.body,quoteId:[p.body.quoteId]});expect(response.status()).toBe(400);expect(await response.json()).toEqual({error:'INVALID_REQUEST'});
  expect((await pool.query('select count(*) from public.bookings')).rows[0].count).toBe('0');
  expect((await pool.query('select count(*) from public.customers')).rows[0].count).toBe('0');
- expect((await pool.query('select count(*) from private.guest_booking_requests where booking_id is null')).rows[0].count).toBe('1');
+ expect((await pool.query('select count(*) from private.guest_booking_requests')).rows[0].count).toBe('0');
+ expect((await pool.query("select count(*) from private.guest_operation_buckets where operation='create'")).rows[0].count).toBe('0');
+});
+
+async function browserStatus(page,intentId,reference) {
+ return page.evaluate(async({intentId,reference})=>{
+  const response=await fetch(`/api/guest-reservations/${reference}`,{headers:{'x-guest-intent':intentId}});
+  return {status:response.status,body:await response.json(),cache:response.headers.get('cache-control'),referrer:response.headers.get('referrer-policy')};
+ },{intentId,reference});
+}
+function unavailable(result) {
+ expect(result.status).toBe(404);expect(result.body).toEqual({error:'ACCESS_UNAVAILABLE'});
+ expect(result.cache).toContain('no-store');expect(result.referrer).toBe('no-referrer');
+}
+test('R1: browser reads require the correct intent binding and revoked/missing capabilities stay uniformly private',async({page,context})=>{
+ const a=await prepare(context.request),first=await(await reserve(context.request,a)).json();
+ const b=await prepare(context.request,2),second=await(await reserve(context.request,b)).json();await page.goto('/');
+ unavailable(await browserStatus(page,a.body.intentId,second.receipt.reference));
+ unavailable(await browserStatus(page,a.body.intentId,randomUUID()));
+ unavailable(await browserStatus(page,randomUUID(),first.receipt.reference));
+ await pool.query('update private.guest_intents set revoked_at=clock_timestamp() where id=$1',[a.body.intentId]);
+ unavailable(await browserStatus(page,a.body.intentId,first.receipt.reference));
+ expect((await browserStatus(page,b.body.intentId,second.receipt.reference)).status).toBe(200);
+ await context.clearCookies();unavailable(await browserStatus(page,b.body.intentId,second.receipt.reference));
+ expect(await page.evaluate(()=>document.cookie.includes('rg-intent-'))).toBe(false);
+});
+test('R1: natural credential expiry rejects browser reads and forced stale cookies without revealing state',async({page,context})=>{
+ await pool.query('update private.guest_security_config set create_ttl_seconds=3,access_ttl_seconds=3');
+ const p=await prepare(context.request),first=await(await reserve(context.request,p)).json();
+ const cookie=(await context.cookies()).find(c=>c.name===`rg-intent-${p.body.intentId}`);
+ const row=(await pool.query('select access_expires_at from private.guest_intents where id=$1',[p.body.intentId])).rows[0];
+ while(Date.now()<row.access_expires_at.getTime()+100)await new Promise(resolve=>setTimeout(resolve,100));
+ await page.goto('/');unavailable(await browserStatus(page,p.body.intentId,first.receipt.reference));
+ const stale=await context.request.get(`/api/guest-reservations/${first.receipt.reference}`,{headers:{...headers,'x-guest-intent':p.body.intentId,cookie:`${cookie.name}=${cookie.value}`}});
+ expect(stale.status()).toBe(404);expect(await stale.json()).toEqual({error:'ACCESS_UNAVAILABLE'});
+ expect((await pool.query('select status from public.bookings')).rows[0].status).toBe('held');
+});
+test('R1: forged trust headers never replace a capability, and contradictory read metadata rejects',async({request,playwright})=>{
+ const p=await prepare(request),first=await(await reserve(request,p)).json();const path=`/api/guest-reservations/${first.receipt.reference}`;
+ const trust={'sec-fetch-site':'same-origin','sec-fetch-mode':'cors','sec-fetch-dest':'empty','x-guest-intent':p.body.intentId};
+ const other=await playwright.request.newContext({baseURL:origin});
+ try {
+  for(const extra of [{},{cookie:`rg-intent-${p.body.intentId}=${Buffer.alloc(32,7).toString('base64url')}`}]){
+   const r=await other.get(path,{headers:{...trust,...extra}});expect(r.status()).toBe(404);expect(await r.json()).toEqual({error:'ACCESS_UNAVAILABLE'});
+  }
+ }finally{await other.dispose();}
+ for(const extra of [{origin:'https://evil.example'},{origin:'null'},{'sec-fetch-site':'cross-site'},{'sec-fetch-site':'same-site'},{'sec-fetch-mode':'no-cors'},{'sec-fetch-dest':'iframe'}]){
+  const r=await request.get(path,{headers:{...trust,...extra}});expect(r.status()).toBe(404);expect(await r.json()).toEqual({error:'ACCESS_UNAVAILABLE'});
+  expect(Boolean(r.headers()['access-control-allow-origin'])).toBe(false);
+ }
+ const noEvidence=await request.get(path,{headers:{'x-guest-intent':p.body.intentId}});expect(noEvidence.status()).toBe(404);
+ for(const endpoint of ['/api/guest-intents','/api/quotes','/api/guest-reservations']){
+  const r=await request.post(endpoint,{headers:trust,data:{}});expect(r.status()).toBe(403); // Read metadata never relaxes POST Origin.
+ }
+});
+test('R1: other-origin browser pages cannot read private status even with the victim browser context',async({page,context})=>{
+ const p=await prepare(context.request),first=await(await reserve(context.request,p)).json();
+ const server=createServer((req,res)=>{res.writeHead(200,{'Content-Type':'text/html'});res.end('<!doctype html><title>Synthetic other origin</title>');});
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const port=server.address().port;
+ try {
+  for(const host of ['127.0.0.1','localhost']){
+   await page.goto(`http://${host}:${port}`);
+   const result=await page.evaluate(async({target,intentId})=>{
+    try{const r=await fetch(target,{credentials:'include',headers:{'x-guest-intent':intentId},signal:AbortSignal.timeout(3000)});return {readable:true,status:r.status};}
+    catch{return {readable:false};}
+   },{target:origin+`/api/guest-reservations/${first.receipt.reference}`,intentId:p.body.intentId});
+   expect(result).toEqual({readable:false});
+  }
+  expect((await pool.query("select count(*) from private.guest_operation_buckets where operation='read'")).rows[0].count).toBe('0');
+ }finally{await new Promise(resolve=>server.close(resolve));}
+});
+test('R2: all malformed guest UUID fields and request keys reject before admission or domain writes',async({request})=>{
+ const p=await prepare(request);
+ const bad=[p.body.intentId];
+ for(const field of ['intentId','courtId'])for(const value of [bad,[...bad,...bad],{},null,7,true]){
+  const body={intentId:p.body.intentId,courtId:court(1),startsAt:at(8),durationMinutes:60,[field]:value};
+  const r=await request.post('/api/quotes',{headers,data:body});expect(r.status()).toBe(400);expect(await r.json()).toEqual({error:'INVALID_REQUEST'});
+ }
+ for(const field of ['intentId','quoteId'])for(const value of [bad,[...bad,...bad],{},null,7,true]){
+  const r=await reserve(request,p,{...p.body,[field]:value});expect(r.status()).toBe(400);expect(await r.json()).toEqual({error:'INVALID_REQUEST'});
+ }
+ for(const key of [undefined,JSON.stringify([p.key]),JSON.stringify([p.key,p.key]),'null','123','{}',p.key+','+p.key]){
+  const r=await request.post('/api/guest-reservations',{headers:{...headers,...(key===undefined?{}:{'idempotency-key':key})},data:p.body});expect(r.status()).toBe(400);
+ }
+ for(const table of ['customers','bookings','booking_revisions','court_occupancies'])expect((await pool.query(`select count(*) from public.${table}`)).rows[0].count).toBe('0');
+ expect((await pool.query('select count(*) from private.guest_booking_requests')).rows[0].count).toBe('0');
+ expect((await pool.query("select count(*) from private.guest_operation_buckets where operation='create'")).rows[0].count).toBe('0');
+ expect((await pool.query('select count(*) from private.guest_quotes')).rows[0].count).toBe('1');
+ // Valid strings still preserve the original fingerprint/receipt semantics.
+ const first=await reserve(request,p);expect(first.status()).toBe(201);const created=await first.json();
+ const retry=await reserve(request,p);expect(retry.status()).toBe(200);expect((await retry.json()).receipt).toEqual(created.receipt);
+ for(const reference of ['invalid',encodeURIComponent(JSON.stringify([created.receipt.reference])),created.receipt.reference+','+created.receipt.reference]){
+  const r=await status(request,p,reference);expect(r.status()).toBe(404);expect(await r.json()).toEqual({error:'ACCESS_UNAVAILABLE'});
+ }
+ for(const intentId of [JSON.stringify([p.body.intentId]),'null','{}',p.body.intentId+','+p.body.intentId]){
+  const r=await request.get(`/api/guest-reservations/${created.receipt.reference}`,{headers:{...headers,'x-guest-intent':intentId}});expect(r.status()).toBe(404);expect(await r.json()).toEqual({error:'ACCESS_UNAVAILABLE'});
+ }
+ expect((await pool.query("select count(*) from private.guest_operation_buckets where operation='read'")).rows[0].count).toBe('0');
 });

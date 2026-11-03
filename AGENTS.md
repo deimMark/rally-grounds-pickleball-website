@@ -3,18 +3,14 @@
 ## Project and current authorization
 
 Build a single-club pickleball booking and management application for Rally Grounds,
-San Juan, La Union, Philippines. Phase 3B.2 local atomic unpaid guest reservations
-are authorized on phase-3b2-guest-reservations, from reviewed checkpoint
-0e411368d37045643495d29b288953f3ebff1007. Follow PHASE-3B-CONTRACTS.md and PHASE-3B2.md.
-Use additive migrations, synthetic local policy/contact fixtures and narrow server-only
-capability gateways. Preserve staff Auth/RLS, agreements, occupancy constraints and mock UI.
-No live policy defaults, public ingress, payments, notifications, production resources,
-merge or deployment. The current security review authorizes a normal push of this
-branch only after no unresolved critical/high finding, passing checks and a clean tree.
-Preserve runtime/schema; add review documentation/tests. Disable Vercel Git deployment
-for this branch. Do not begin Phase 3B.3. Autonomous
-expiry scheduling remains Phase 3B.3. Record actual test evidence and stop for review.
-Never commit credentials or real customer data.
+San Juan, La Union, Philippines. Phase 3B.2.1 corrections are authorized on
+phase-3b2-1-security-fixes from reviewed checkpoint 22fb656f7c7c1dbcc35f23063aea2822c1aeecc7.
+Correct the browser private GET trust boundary and strict UUID JSON types; follow
+PHASE-3B2-1.md and preserve existing transactions, policy history, RLS, staff Auth,
+capability binding and idempotency. Synthetic local testing only. No push, merge,
+deployment, production connection, public booking, payments or Phase 3B.3 expiry work.
+Disable Vercel Git deployment for this branch. Record actual test results and commit
+locally for review. Never commit credentials or real customer data.
 
 ## Stack and boundaries
 

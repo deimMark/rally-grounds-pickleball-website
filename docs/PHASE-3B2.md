@@ -26,11 +26,12 @@ these services. Only loopback application/database bindings can enable the new N
 | GET /api/availability | Exact day/durationMinutes query. PostgreSQL court UUID/layout and eligible UTC intervals/statuses; Asia/Manila scheduling. No booking/customer/event details. |
 | POST /api/quotes | Strict intentId/courtId/startsAt/durationMinutes, per-intent cookie, exact Origin. Immutable private quote; public terms/version projection only. No occupancy. |
 | POST /api/guest-reservations | Strict intentId/quoteId/guest/estimatedPlayers plus UUID Idempotency-Key and scoped cookie. 201 first hold, 200 valid replay; immutable receipt plus fresh current status. |
-| GET /api/guest-reservations/[reference] | Exact Origin and X-Guest-Intent nonsecret UUID selector plus matching cookie. SQL checks capability AND intent/booking binding in the read transaction. Uniform 404 for absent/stranger/lost/expired/revoked access. |
+| GET /api/guest-reservations/[reference] | Trusted GET context and X-Guest-Intent nonsecret UUID selector plus matching cookie. SQL checks capability AND intent/booking binding in the read transaction. Uniform 404 for absent/stranger/lost/expired/revoked access. |
 
-The existing intent endpoint/cookies remain unchanged. Reads deliberately require exact
-Origin too: local API clients must supply it; a future private page can use same-origin
-fetch with this header. No guest form/status page or public selector integration exists.
+The existing intent endpoint/cookies remain unchanged. Phase 3B.2.1 corrects the original
+read trust defect: real browser GETs can use same-origin Fetch Metadata without Origin,
+while explicit API origins must match. See [the correction contract](PHASE-3B2-1.md).
+POST Origin remains mandatory; browser JavaScript must not supply the forbidden header. No guest form/status page or public selector integration exists.
 The mock owner site has no calls to these endpoints. No success message claims payment
 or a confirmed reservation; the only creation state is held/unpaid.
 

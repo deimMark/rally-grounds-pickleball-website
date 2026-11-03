@@ -3,7 +3,8 @@
   "git": {
     "deploymentEnabled": {
       "phase-3b-guest-security": false,
-      "phase-3b2-guest-reservations": false
+      "phase-3b2-guest-reservations": false,
+      "phase-3b2-1-security-fixes": false
     }
   }
 }
