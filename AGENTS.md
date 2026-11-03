@@ -13,7 +13,8 @@ Draft club address/phone and provisional hours must never appear owner-confirmed
 
 The user now authorizes a court-orientation correction commit and push on this visual
 QA branch only, followed by its existing Git integration Preview. See
-docs/qa/phase-1.1/court-layout/REVIEW.md. Do not merge, deploy production, change Vercel
+docs/qa/phase-1.1/court-precision/REVIEW.md. The prior orientation correction failed
+visual review; use shared dimensions and Court 5 right-edge alignment, not its old tests. Do not merge, deploy production, change Vercel
 settings or begin Phase 3B. Keep owner-demo (the default branch) and Phase 2/3 branches
 unchanged. Capture requested screenshots and run appropriate checks before publication. Never commit credentials or real customer data.
 

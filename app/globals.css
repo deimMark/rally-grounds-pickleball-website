@@ -298,50 +298,46 @@ select { border: 1px solid #bdc6d0; background: white; border-radius: 3px; color
   .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* Actual sketch: three portrait courts; two landscape courts below Court 5. */
+/* One physical system: W=20, H=44, gap=4; lower courts share Court 5's right edge. */
 .court-map {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: auto auto auto;
-  gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(var(--map-width), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--map-height), minmax(0, 1fr));
+  aspect-ratio: var(--map-width) / var(--map-height);
+  gap: 0;
   width: 100%;
-  max-width: 480px;
+  max-width: 440px;
   margin-inline: auto;
 }
 .court-map .court-tile {
-  grid-column: var(--court-column) / span var(--court-span);
-  min-width: 0;
-  width: 100%;
-  justify-content: space-between;
-  padding: 12px 2px;
-  aspect-ratio: 5 / 11;
+  grid-column: var(--court-x) / span var(--court-width);
+  grid-row: var(--court-y) / span var(--court-height);
+  width: 100%; height: 100%; min-width: 0; min-height: 0; padding: 0;
+  --court-surface: #e3e8e5;
 }
-.court-map .court-tile.landscape { aspect-ratio: 11 / 5; padding-block: 4px; }
-.court-map .court-tile-label { flex-direction: column; gap: 2px; padding: 2px 0; letter-spacing: .4px; }
-.court-map .landscape .court-tile-label { flex-direction: row; gap: 4px; }
-.court-map .court-status { margin: 0; padding: 0; font-size: 12px; line-height: 1.5; }
+.court-map .court-tile.reserved { --court-surface: #e6e8eb; }
+.court-map .court-tile.open-play { --court-surface: #efe5d3; }
+.court-map .court-tile.selected { --court-surface: var(--color-navy); }
+.court-map .court-lines {
+  inset: 5%; width: 90%; height: 90%; border: 0; opacity: .4;
+  fill: none; stroke: currentColor; stroke-width: .3;
+}
+.court-map .court-net { stroke-width: .6; }
+.court-map .court-tile-label {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  padding: 1px 5px; background: var(--court-surface); border-radius: 3px;
+}
+.court-map .court-name { display: none; }
+.court-map .court-tile-label strong { font-size: 28px; line-height: 1; }
+.court-map .court-status {
+  position: absolute; left: 50%; bottom: 5px; transform: translateX(-50%);
+  margin: 0; padding: 0 2px; max-width: calc(100% - 4px);
+  font-size: 12px; line-height: 16px; white-space: nowrap;
+  background: var(--court-surface);
+}
 .court-map .court-status > span { display: none; }
-/* Portrait: horizontal net/kitchen lines, split vertical service centerline. */
-.court-map .court-lines { inset: 7px; }
-.court-map .court-lines::before, .court-map .court-lines::after {
-  left: 0; right: 0; width: auto; height: 0; border: 0; border-top: 1px solid currentColor;
-}
-.court-map .court-lines::before { top: 34%; }
-.court-map .court-lines::after { top: 66%; }
-.court-map .court-lines > span { top: 50%; left: -4px; right: -4px; bottom: auto; width: auto; height: 0; border: 0; border-top: 2px solid currentColor; }
-.court-map .court-lines i { left: 50%; top: 0; bottom: 0; width: 1px; height: auto; border: 0; background: linear-gradient(currentColor 0 34%, transparent 34% 66%, currentColor 66%); }
-/* Landscape: rotate net, kitchen boundaries and service markings together. */
-.court-map .landscape .court-lines::before, .court-map .landscape .court-lines::after { top: 0; bottom: 0; width: 0; height: auto; border: 0; border-left: 1px solid currentColor; }
-.court-map .landscape .court-lines::before { left: 34%; right: auto; }
-.court-map .landscape .court-lines::after { left: 66%; right: auto; }
-.court-map .landscape .court-lines > span { left: 50%; top: -4px; bottom: -4px; right: auto; width: 0; height: auto; border: 0; border-left: 2px solid currentColor; }
-.court-map .landscape .court-lines i { left: 0; right: 0; top: 50%; bottom: auto; width: auto; height: 1px; background: linear-gradient(to right, currentColor 0 34%, transparent 34% 66%, currentColor 66%); }
-@media (max-width: 760px) {
-  .court-map-panel { padding-inline: 12px; }
-  .court-map { gap: 8px; }
-  .court-map .court-tile { padding-block: 8px; padding-inline: 0; }
-  .court-map .court-tile.landscape { padding-block: 2px; }
-  .court-map .court-tile-label strong { font-size: 24px; }
-  .court-map .map-annotation { padding: 8px 4px; }
-  .court-map .map-annotation strong { font-size: 18px; letter-spacing: 0; }
-  .court-map .map-cross, .court-map .path-lines, .court-map .map-annotation > span:last-of-type { display: none; }
-}
+.court-map .map-annotation { grid-column: 1 / 23; grid-row: 49 / -1; padding: 6px; }
+.court-map .map-annotation strong { font-size: clamp(12px, 1.3vw, 18px); letter-spacing: 0; }
+.court-map .map-cross, .court-map .path-lines, .court-map .map-annotation > span:last-of-type { display: none; }
+.court-list .court-lines { display: none; }
+@media (max-width: 760px) { .court-map-panel { padding-inline: 12px; } }

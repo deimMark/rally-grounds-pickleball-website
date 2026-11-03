@@ -44,7 +44,7 @@ test('court selector preserves layout and previews only; date changes reset sele
   expect(bounds[3].x).toBeLessThan(bounds[4].x);
   expect(bounds[4].x).toBeLessThan(bounds[5].x);
   expect(bounds[3].y).toBe(bounds[5].y);
-  expect(bounds[2].x).toBe(bounds[5].x);
+  expect(bounds[2].x + bounds[2].width).toBeCloseTo(bounds[5].x + bounds[5].width, 0);
   expect(bounds[1].x).toBe(bounds[2].x);
   expect(bounds[1].y).toBeGreaterThan(bounds[2].y);
   const preview = page.getByRole('button', { name: 'Preview this session' });

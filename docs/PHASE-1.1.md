@@ -56,3 +56,11 @@ orientations. The [court correction QA](qa/phase-1.1/court-layout/REVIEW.md) and
 new desktop/390 px screenshots supersede that geometry: Courts 3/4/5 portrait, Courts
 2/1 landscape below Court 5, correctly rotated markings. This correction is authorized
 for publication on the visual QA branch only; owner-demo is not merged or modified.
+
+## Precision review supersedes the first orientation correction
+
+The first orientation correction passed its tests but failed human visual QA. Use the
+[precision correction record](qa/phase-1.1/court-precision/REVIEW.md) and screenshots
+for the current proposal: one 20×44 court geometry, swapped landscape dimensions,
+uniform proportional spacing and lower courts right-aligned to Court 5. Both former
+left-alignment assertions were replaced. Human visual approval remains required.

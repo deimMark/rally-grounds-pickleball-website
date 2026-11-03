@@ -1,5 +1,9 @@
 # Court orientation correction — 2026-11-02
 
+**Historical, visually rejected geometry.** Superseded by the
+[court map precision correction](../court-precision/REVIEW.md); its former left-edge
+alignment and independent landscape sizing are no longer acceptance criteria.
+
 Branch: `phase-1-1-visual-qa`; parent `06134a67f67c6ba4d174ba1e982b5c4a219ef4ad`.
 This additive visual correction supersedes the court geometry in the earlier Phase 1.1
 captures. The user-supplied sketch and previously documented row/column positions are

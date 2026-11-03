@@ -3,8 +3,8 @@ import AxeBuilder from '@axe-core/playwright';
 import { mkdir, writeFile } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 
-// Start the corrected production build locally on 3120. Never contacts a deployment.
-const directory = 'docs/qa/phase-1.1/court-layout';
+// Start the corrected production build locally on 3131. Never contacts a deployment.
+const directory = 'docs/qa/phase-1.1/court-precision';
 await mkdir(directory, { recursive: true });
 const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined });
 const records = [];
@@ -12,7 +12,7 @@ try {
   for (const [name, width] of [['desktop-court-selector', 1440], ['mobile-court-selector-390', 390]]) {
     const context = await browser.newContext({ viewport: { width, height: 1000 } });
     const page = await context.newPage();
-    await page.goto('http://127.0.0.1:3120/');
+    await page.goto('http://127.0.0.1:3131/');
     await page.evaluate(() => document.fonts.ready);
     const result = await new AxeBuilder({ page }).include('#courts').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
     assert.deepEqual(result.violations, []);
@@ -28,8 +28,8 @@ try {
     await context.close();
   }
   await writeFile(`${directory}/capture-metadata.json`, JSON.stringify({
-    capturedAt: new Date().toISOString(), baseCommit: '06134a67f67c6ba4d174ba1e982b5c4a219ef4ad',
-    revision: 'Court orientation correction working tree, before its commit', records,
+    capturedAt: new Date().toISOString(), baseCommit: '3af99b79efe7435fccc16e0881918f4e14b2bed5',
+    revision: 'Court precision correction working tree, before its commit', records,
   }, null, 2) + '\n');
   console.log('Captured corrected desktop and 390px court selectors; both scoped axe scans have zero violations.');
 } finally { await browser.close(); }
