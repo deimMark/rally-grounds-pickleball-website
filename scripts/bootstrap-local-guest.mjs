@@ -19,14 +19,15 @@ try {
       max_active_intents=$6,max_cookie_count=$7,retention_seconds=$8,key_fingerprint=$9 where singleton`,
     [fixture.purpose,fixture.create_ttl_seconds,fixture.access_ttl_seconds,fixture.window_seconds,fixture.max_requests,
       fixture.max_active_intents,fixture.max_cookie_count,fixture.retention_seconds,createHash('sha256').update(Buffer.from(key,'hex')).digest('hex')]);
+    await client.query(readFileSync(`${projectRoot}/supabase/guest-booking.local.sql`, 'utf8'));
   } finally { await client.end(); }
-  const values = { GUEST_INTENTS_ENABLED: 'true', GUEST_NETWORK_MODE: 'local-shared', GUEST_RATE_HMAC_KEY: key, SUPABASE_GUEST_SERVICE_KEY: settings.adminKey };
+  const values = { GUEST_INTENTS_ENABLED: 'true', GUEST_NETWORK_MODE: 'local-shared', GUEST_RATE_HMAC_KEY: key, SUPABASE_GUEST_SERVICE_KEY: settings.adminKey, GUEST_RESERVATIONS_ENABLED: 'true' };
   for (const [name,value] of Object.entries(values)) {
     const pattern = new RegExp(`^${name}=.*$`, 'm');
     contents = pattern.test(contents) ? contents.replace(pattern, `${name}=${value}`) : contents.trimEnd()+`\n${name}=${value}\n`;
   }
   writeFileSync(path,contents,{mode:0o600});chmodSync(path,0o600);
-  console.log('Synthetic local guest admission configured; private bindings were not printed. No guest booking enabled.');
+  console.log('Synthetic local guest admission configured; private bindings were not printed. Local synthetic guest API configured; public demo remains disconnected.');
 } catch {
   console.error('Local guest configuration failed; verify local migrations and private bindings.');process.exitCode=1;
 }

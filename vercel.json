@@ -2,7 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "git": {
     "deploymentEnabled": {
-      "phase-3b-guest-security": false
+      "phase-3b-guest-security": false,
+      "phase-3b2-guest-reservations": false
     }
   }
 }

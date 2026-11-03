@@ -6,7 +6,7 @@ const nextConfig = {
       { key: 'X-Content-Type-Options', value: 'nosniff' },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       { key: 'X-Frame-Options', value: 'DENY' },
-    ] }, { source: '/api/guest-intents', headers: [
+    ] }, { source: '/api/:path*', headers: [
       { key: 'Referrer-Policy', value: 'no-referrer' },
     ] }];
   },

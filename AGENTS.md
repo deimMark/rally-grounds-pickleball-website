@@ -3,21 +3,15 @@
 ## Project and current authorization
 
 Build a single-club pickleball booking and management application for Rally Grounds,
-San Juan, La Union, Philippines. Phase 3B.1 local guest security is authorized on
-phase-3b-guest-security, from reviewed Phase 3A commit
-3e9a94c724f430bab9df4bd7107dfae659966cf4. Implement private guest intents, secure
-server admission, scoped capability checks and durable local abuse limits only.
-See docs/PHASE-3B-CONTRACTS.md, docs/PHASE-3B1.md and its QA report.
-
-Preserve staff Auth, booking functions, agreements, constraints and the public mock UI.
-No guest reservation creation, customer contact collection, payments, uploads or public
-launch. Use additive migrations and synthetic local configuration; no invented live
-TTL/limits or unresolved commercial defaults. Do not modify owner-demo, Vercel or Phase 3A
-branch tips. The current security review authorizes publishing this branch only if no unresolved
-critical/high defect is found. Preserve the reviewed runtime/schema; add review evidence
-and the branch-specific Vercel Git deployment opt-out. Do not merge, deploy, create
-external resources or begin Phase 3B.2. Keep owner-demo and Vercel project settings
-unchanged. Report actual test evidence and stop for independent review. Never commit credentials or real customer data.
+San Juan, La Union, Philippines. Phase 3B.2 local atomic unpaid guest reservations
+are authorized on phase-3b2-guest-reservations, from reviewed checkpoint
+0e411368d37045643495d29b288953f3ebff1007. Follow PHASE-3B-CONTRACTS.md and PHASE-3B2.md.
+Use additive migrations, synthetic local policy/contact fixtures and narrow server-only
+capability gateways. Preserve staff Auth/RLS, agreements, occupancy constraints and mock UI.
+No live policy defaults, public ingress, payments, notifications, production resources,
+merge, deployment or push. Disable Vercel Git deployment for this branch. Autonomous
+expiry scheduling remains Phase 3B.3. Record actual test evidence and stop for review.
+Never commit credentials or real customer data.
 
 ## Stack and boundaries
 
