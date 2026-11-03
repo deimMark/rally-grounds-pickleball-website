@@ -7,10 +7,12 @@ San Juan, La Union, Philippines. Phase 3B.2.1 corrections are authorized on
 phase-3b2-1-security-fixes from reviewed checkpoint 22fb656f7c7c1dbcc35f23063aea2822c1aeecc7.
 Correct the browser private GET trust boundary and strict UUID JSON types; follow
 PHASE-3B2-1.md and preserve existing transactions, policy history, RLS, staff Auth,
-capability binding and idempotency. Synthetic local testing only. No push, merge,
-deployment, production connection, public booking, payments or Phase 3B.3 expiry work.
-Disable Vercel Git deployment for this branch. Record actual test results and commit
-locally for review. Never commit credentials or real customer data.
+capability binding and idempotency. Synthetic local testing only. The current final
+review authorizes a normal push of this exact branch after no unresolved critical/high
+finding, passing validation and a clean tree. Preserve runtime/tests from reviewed
+5086c11b8e776ad9134c4f80b6cffb9f524c99b3; record review evidence in documentation.
+No merge, deployment, production connection, public booking, payments or Phase 3B.3
+expiry work. Keep Vercel Git deployment disabled for this branch. Never commit credentials or real customer data.
 
 ## Stack and boundaries
 

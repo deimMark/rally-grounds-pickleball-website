@@ -108,3 +108,10 @@ an expiry worker. No-go for public booking/payments/production until launch gate
 `vercel.json` disables Git deployment for `phase-3b2-1-security-fixes` and preserves its
 base-branch opt-outs. No push, merge, Vercel action, production connection, real customer
 collection, payment, owner-demo modification or Phase 3B.3 implementation was performed.
+
+## Final security/publication review
+
+[SECURITY-REVIEW.md](SECURITY-REVIEW.md) records the subsequent final review of all
+13 correction files, repeated 99 DB / 138 unit / 45 browser results, publication gate
+and remaining live-readiness risks. The implementation QA above is historical;
+no runtime/test/schema correction or Phase 3B.3 feature was added in the final review.
