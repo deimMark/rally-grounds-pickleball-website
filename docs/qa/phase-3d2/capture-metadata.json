@@ -1,0 +1,108 @@
+{
+  "capturedAt": "2026-11-04T03:48:04.280Z",
+  "branch": "phase-3d2-booking-ux",
+  "baseCommit": "0172b32d24f3a4f1fddb5e3e66ffe7620eb93265",
+  "data": "synthetic fixtures only",
+  "records": [
+    {
+      "name": "booking-desktop",
+      "route": "/book",
+      "width": 1440,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 10
+        }
+      ]
+    },
+    {
+      "name": "booking-grouped-slots-mobile-390",
+      "route": "/book",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 11
+        }
+      ]
+    },
+    {
+      "name": "booking-list-view-mobile-390",
+      "route": "/book",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 11
+        }
+      ]
+    },
+    {
+      "name": "reset-notice-mobile-390",
+      "route": "/book",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 11
+        }
+      ]
+    },
+    {
+      "name": "consent-error-mobile-390",
+      "route": "/book",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 2
+        }
+      ]
+    },
+    {
+      "name": "details-mobile-390",
+      "route": "/book",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "name": "confirmation-mobile-390",
+      "route": "/booking/confirmation?day=2026-11-07&court=court-3&start=08%3A00&duration=120&players=4",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "status-desktop",
+      "route": "/booking/status?day=2026-11-07&court=court-3&start=08%3A00&duration=120&players=4",
+      "width": 1440,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "status-expired-mobile-390",
+      "route": "/booking/status?day=2026-11-07&court=court-3&start=08%3A00&duration=120&players=4",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "status-unavailable-mobile-390",
+      "route": "/booking/status",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    }
+  ]
+}

@@ -1,16 +1,20 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { Brand } from '@/components/ui/brand';
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname() || '/';
+  const onBooking = pathname === '/book' || pathname.startsWith('/booking');
+  const current = onBooking ? 'page' : undefined;
   return <header className="site-header">
     <div className="container header-inner">
       <Brand />
       <nav aria-label="Main navigation" className="desktop-nav">
-        <Link href="/#the-club">The club</Link><Link href="/#courts">Our courts</Link><Link href="/#community">The community</Link><Link href="/book">Booking demo</Link>
+        <Link href="/#the-club">The club</Link><Link href="/#courts">Our courts</Link><Link href="/#community">The community</Link><Link href="/book" aria-current={current}>Booking demo</Link>
       </nav>
       <div className="header-actions">
         <Link href="/staff" className="staff-link">Staff demo <ArrowUpRight size={14} aria-hidden="true" /></Link>
@@ -20,7 +24,7 @@ export function Header() {
     </div>
     {open && <nav id="mobile-navigation" className="mobile-navigation" aria-label="Mobile navigation">
       <Link href="/#the-club" onClick={() => setOpen(false)}>The club</Link><Link href="/#courts" onClick={() => setOpen(false)}>Our courts</Link><Link href="/#community" onClick={() => setOpen(false)}>The community</Link>
-      <Link href="/book" onClick={() => setOpen(false)}>Booking demo</Link>
+      <Link href="/book" aria-current={current} onClick={() => setOpen(false)}>Booking demo</Link>
       <Link href="/staff">Staff dashboard demo <ArrowUpRight size={16} aria-hidden="true" /></Link>
     </nav>}
   </header>;

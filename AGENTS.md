@@ -3,26 +3,32 @@
 ## Project and current authorization
 
 Build a single-club pickleball booking and management application for Rally Grounds,
-San Juan, La Union, Philippines. Current authorization: Phase 3D.1 synthetic customer
-booking interface on local branch `phase-3d1-booking-interface`, based on approved
-owner-demo commit 6146af81c6cdf6a501260b39dbc9ebfe6d0a64af. The work was recovered from
-an unpublished earlier implementation as a verified patch (see docs/PHASE-3D1.md).
+San Juan, La Union, Philippines. Current authorization: Phase 3D.2 booking UX and
+accessibility refinement on branch `phase-3d2-booking-ux`, created from the completed
+Phase 3D.1 commit 0172b32d24f3a4f1fddb5e3e66ffe7620eb93265 (branch
+`phase-3d1-booking-interface`, itself one commit on approved owner-demo
+6146af81c6cdf6a501260b39dbc9ebfe6d0a64af). See docs/PHASE-3D2.md for scope.
 
-Authorized now: local QA corrections and one conditional local commit after lint, unit
-tests, browser tests, build and credential/bundle scans pass. Then stop for review.
-Not authorized: push or publication of any branch, merge, pull request, deployment,
-Vercel setting changes, changes to owner-demo, production Supabase, live bookings,
-GCash/payment processing, or Phase 3B.3 expiry-worker activation. GitHub publication
-requires separate explicit approval; never push a recovery or other non-excluded branch.
+Authorized now: the approved Phase 3D.2 UX/accessibility improvements, their tests and
+documentation, and one conditional local commit after lint, the complete Vitest and
+Playwright suites, production build, credential and client-bundle scans pass on pinned
+Node 24. Then stop for review. Not authorized: push or publication of any branch, pull
+request, merge, deployment, Vercel project-setting changes, changes to owner-demo or
+phase-3d1-booking-interface, production Supabase, live reservations, real contact
+collection, GCash/payment processing, evidence uploads, guest capability cookies/tokens,
+backend migrations or Phase 3B.3 expiry-worker integration. GitHub publication requires
+separate explicit approval; never push a branch that vercel.json does not exclude.
 
-Preserve the approved design, court geometry (Courts 3/4/5 portrait above, 2/1 landscape
-below, 5/2/1 right edges aligned), responsive homepage and read-only staff demo. Use
-synthetic profiles/availability only; no real customer collection, API mutation, payment
-or authenticated booking claims. Follow docs/PHASE-3D1.md; the documented Phase 3B
-DTO/privacy contracts are interface compatibility references only. Do not merge or
-depend on unpublished backend/worker code. Phase 3B security finding H2 remains an
-unresolved, separate backend blocker: do not remediate, import or activate backend code
-in this UI task. No credentials, customer data or private evidence in Git.
+Preserve the approved design, the shared CourtMap geometry (Courts 3/4/5 portrait above,
+2/1 landscape below, 5/2/1 right edges aligned), responsive homepage and read-only staff
+demo. Keep every demonstration price, operating hour, duration, player option and example
+policy in lib/demo; do not invent owner-approved business rules. Synthetic profiles and
+availability only; no API mutation, payment or authenticated booking claims. Do not make
+unavailable time slots keyboard tab stops; keep their status/reason accessible and prevent
+activation. Do not weaken existing tests or hide failures with retries. Follow
+docs/PHASE-3D1.md for the interface contracts (references only). Do not merge or depend on
+unpublished backend/worker code; Phase 3B security finding H2 remains an unresolved,
+separate backend blocker. No credentials, customer data or private evidence in Git.
 
 ## Stack and boundaries
 

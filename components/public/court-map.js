@@ -1,5 +1,7 @@
+import { useId } from 'react';
 import { Check } from 'lucide-react';
 import { statusLabels } from '@/lib/domain/demo-availability';
+import { courtLayoutDescription } from '@/lib/demo/booking';
 
 function CourtMarkings({ landscape, width, length }) {
   const middle = length / 2;
@@ -15,14 +17,20 @@ function CourtMarkings({ landscape, width, length }) {
 }
 
 // One geometry for the approved floor plan, shared by all demo selectors.
-export function CourtMap({ club, courts, selectedCourtId, onSelect, getStatus, view = 'map' }) {
+// `getDetail` (optional) supplies a short per-court availability note; it is read as the
+// button's accessible description and shown visibly in list view only.
+export function CourtMap({ club, courts, selectedCourtId, onSelect, getStatus, getDetail, view = 'map' }) {
  const { width: courtWidth, length: courtLength, gap } = club.courtMap;
  const mapWidth = courtWidth * 3 + gap * 2;
  const mapHeight = courtLength + (courtWidth + gap) * 2;
+ const descriptionId = useId();
  return (
-<div className={view === 'map' ? 'court-map' : 'court-list'} role="group" aria-label="Select a demo court" style={{ '--map-width': mapWidth, '--map-height': mapHeight }}>
+<div className={view === 'map' ? 'court-map' : 'court-list'} role="group" aria-label="Select a demo court" aria-describedby={descriptionId} style={{ '--map-width': mapWidth, '--map-height': mapHeight }}>
+              <p id={descriptionId} className="sr-only">{courtLayoutDescription}</p>
               {courts.map((item) => {
                 const status = getStatus(item);
+                const detail = getDetail?.(item);
+                const detailId = detail ? `${descriptionId}-${item.id}` : undefined;
                 const selected = item.id === selectedCourtId;
                 const landscape = item.orientation === 'landscape';
                 const geometry = {
@@ -31,10 +39,11 @@ export function CourtMap({ club, courts, selectedCourtId, onSelect, getStatus, v
                   '--court-width': landscape ? courtLength : courtWidth,
                   '--court-height': landscape ? courtWidth : courtLength,
                 };
-                return <button key={item.id} className={`court-tile ${item.orientation} ${status} ${selected ? 'selected' : ''}`} style={geometry} aria-label={`Court ${item.number}, ${statusLabels[status]}`} aria-pressed={selected} onClick={() => onSelect(item.id)}>
+                return <button key={item.id} className={`court-tile ${item.orientation} ${status} ${selected ? 'selected' : ''}`} style={geometry} aria-label={`Court ${item.number}, ${statusLabels[status]}`} aria-pressed={selected} aria-describedby={detailId} onClick={() => onSelect(item.id)}>
                   <CourtMarkings landscape={landscape} width={courtWidth} length={courtLength} />
                   <span className="court-tile-label"><span className="court-name">COURT</span> <strong>{String(item.number).padStart(2, '0')}</strong></span>
                   <span className="court-status"><span aria-hidden="true" />{statusLabels[status]}</span>
+                  {detail && <span id={detailId} className="court-detail">{detail}</span>}
                   {selected && <span className="court-check" aria-hidden="true"><Check size={13} /></span>}
                 </button>;
               })}

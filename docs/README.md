@@ -1,4 +1,6 @@
-Current visual review: [Phase 1.1](PHASE-1.1.md) and
+Current UI milestone: [Phase 3D.2 booking UX and accessibility](PHASE-3D2.md) with its
+[QA report](qa/phase-3d2/REVIEW.md), on `phase-3d2-booking-ux` from the Phase 3D.1
+commit; see [Phase 3D.1](PHASE-3D1.md). Earlier visual review: [Phase 1.1](PHASE-1.1.md) and
 [QA screenshots](qa/phase-1.1/REVIEW.md), on its own branch from owner-demo.
 The original planning record below is retained for context.
 

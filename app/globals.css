@@ -417,3 +417,40 @@ select { border: 1px solid #bdc6d0; background: white; border-radius: 3px; color
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .button { transition: none; } }
 .booking-review-session { margin: 0 0 20px; font-size: 14px; line-height: 1.9; }
+
+/* Phase 3D.2: validation, announcements, grouped slots, compact mobile summary. */
+.booking-notice-region:empty { display: none; }
+.booking-notice { display: flex; gap: 10px; align-items: flex-start; margin: -8px 0 22px; padding: 12px 14px; background: #eaf1f8; border-left: 4px solid var(--color-blue); color: var(--color-navy); font-size: 14px; line-height: 1.7; border-radius: 3px; }
+.booking-notice svg, .booking-error svg { flex-shrink: 0; margin-top: 3px; }
+.booking-consent-field { border-left: 4px solid transparent; padding-left: 10px; margin-left: -14px; }
+.booking-consent-field.invalid { border-left-color: #a32d2d; background: #fbf1f1; border-radius: 3px; }
+.booking-error { display: flex; gap: 9px; align-items: flex-start; color: #8a1f1f; font-size: 14px; font-weight: 600; line-height: 1.6; margin: 2px 0 12px; }
+.booking-map-note { margin-top: 14px; text-align: center; }
+.court-list .court-detail { font-size: 12px; color: inherit; opacity: .9; }
+.court-map .court-detail { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.slot-group { margin-top: 18px; }
+.slot-group-title { font-size: 13px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0 0 10px; }
+.booking-slots .time-slots .slot { display: flex; flex-direction: column; min-width: 0; }
+.booking-slots .time-slots .slot > button { width: 100%; }
+.booking-slots .time-slots .slot > button > span { font-weight: 600; }
+.booking-slots .time-slots .slot-reason { display: block; font-size: 12px; color: #4f5b6b; line-height: 1.35; margin-top: 4px; text-align: center; }
+.booking-slots .time-slots .slot.unavailable .slot-reason { color: #697483; }
+.booking-receipt-title { font-size: 15px; margin: 24px 0 4px; }
+.booking-tz { font-size: 12px; font-weight: 400; color: var(--muted); }
+.booking-meaning { max-width: 760px; margin: 0 auto 32px; padding: 16px 20px; background: white; border: 1px solid var(--border); border-radius: 4px; }
+.booking-meaning dl { margin: 0; display: grid; gap: 10px; }
+.booking-meaning dl > div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 12px; font-size: 14px; line-height: 1.7; }
+.booking-meaning dt { font-weight: 700; }
+.booking-meaning dd { margin: 0; color: var(--muted); }
+.booking-compact-summary { display: none; }
+@media (max-width: 760px) {
+ .booking-meaning dl > div { grid-template-columns: 1fr; gap: 2px; }
+ .booking-consent-field { margin-left: -10px; padding-left: 6px; }
+ .booking-compact-summary { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 16px; min-height: 56px; background: var(--color-navy); color: white; font-size: 13px; line-height: 1.5; box-shadow: 0 -2px 10px #0d152533; }
+ .booking-compact-summary a { color: var(--color-gold); text-decoration: underline; text-underline-offset: 3px; min-height: 44px; display: inline-flex; align-items: center; }
+ .booking-compact-summary strong { color: white; }
+ .booking-compact-summary:focus-within, .booking-compact-summary a:focus-visible { outline-color: var(--color-gold); }
+ /* Keep focused controls above the fixed bar. */
+ .booking-page:has(.booking-compact-summary) { padding-bottom: 120px; }
+ html:has(.booking-compact-summary) { scroll-padding-bottom: 110px; }
+}
