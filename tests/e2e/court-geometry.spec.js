@@ -6,12 +6,21 @@ const documentBox = (locator) => locator.evaluate((node) => {
   return { x: box.x + scrollX, y: box.y + scrollY, width: box.width, height: box.height };
 });
 const court = (page, number) => page.getByRole('button', { name: new RegExp(`^Court ${number},`) });
+// The homepage streams through app/(public)/loading.js: content first arrives inside a
+// hidden Suspense container and React reveals it shortly afterwards. Measure only after
+// the map is revealed and laid out, otherwise its box reads as 0x0.
+const waitForMeasurableMap = async (page) => {
+  const map = page.locator('.court-map');
+  await expect(map).toBeVisible();
+  await expect.poll(() => map.evaluate((node) => node.getBoundingClientRect().width)).toBeGreaterThan(0);
+  return map;
+};
 for (const width of [320, 390, 768, 1024, 1440]) {
   test(`court geometry, markings and selection match the sketch at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
-    const map = await documentBox(page.locator('.court-map'));
+    const map = await documentBox(await waitForMeasurableMap(page));
     const boxes = {};
     const close = (actual, expected) => expect(Math.abs(actual - expected)).toBeLessThanOrEqual(1);
     const right = (box) => box.x + box.width;
@@ -88,6 +97,7 @@ for (const width of [390, 1440]) {
   test(`court map remains keyboard accessible at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto('/');
+    await waitForMeasurableMap(page);
     await court(page, 3).focus();
     for (const number of [3, 4, 5, 2, 1]) {
       await expect(court(page, number)).toBeFocused();

@@ -38,6 +38,7 @@ test('court selector preserves layout and previews only; date changes reset sele
   const mutations = [];
   page.on('request', (req) => { if (req.method() !== 'GET') mutations.push(req.url()); });
   await page.goto('/');
+  await expect(page.locator('.court-map')).toBeVisible(); // wait for the streamed content reveal
   const court = (number) => page.getByRole('button', { name: new RegExp(`^Court ${number},`) });
   const bounds = {};
   for (const n of [1, 2, 3, 4, 5]) bounds[n] = await court(n).boundingBox();
@@ -150,6 +151,9 @@ test('desktop schedule keeps all statuses and demo collection labels visible', a
 test('draft contact stays unverified and interactive targets remain usable', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
+  // Content streams through app/(public)/loading.js and is revealed after load; controls
+  // have no layout box (boundingBox() === null) until then, so wait before measuring.
+  await expect(page.locator('.session-panel')).toBeVisible();
   await expect(page.locator('.draft-contact')).toContainText('OWNER CONFIRMATION PENDING');
   await expect(page.locator('.draft-contact')).toContainText('0917 777 3933');
   await expect(page.locator('.draft-contact')).toContainText('These supplied details are unverified');

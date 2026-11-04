@@ -1,21 +1,10 @@
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
+import { CourtMap } from './court-map';
 import { ArrowRight, Check, Map, List, Clock3, Info, RotateCcw } from 'lucide-react';
 import { DemoBadge } from '@/components/ui/demo-notice';
 import { formatMoney, getCourtStatus, getDemoSlots, statusLabels } from '@/lib/domain/demo-availability';
-
-function CourtMarkings({ landscape, width, length }) {
-  const middle = length / 2;
-  const kitchen = length * 7 / 44;
-  const near = middle - kitchen, far = middle + kitchen;
-  return <svg className="court-lines" viewBox={`0 0 ${landscape ? `${length} ${width}` : `${width} ${length}`}`} aria-hidden="true" focusable="false">
-    <g transform={landscape ? `translate(${length} 0) rotate(90)` : undefined}>
-      <rect x=".5" y=".5" width={width - 1} height={length - 1} />
-      <path d={`M0 ${near}H${width} M0 ${far}H${width} M${width / 2} 0V${near} M${width / 2} ${far}V${length}`} />
-      <path className="court-net" d={`M0 ${middle}H${width}`} />
-    </g>
-  </svg>;
-}
 
 export function CourtSelector({ club, courts, days, availability }) {
   const [dayId, setDayId] = useState(days[0].id);
@@ -23,9 +12,6 @@ export function CourtSelector({ club, courts, days, availability }) {
   const [view, setView] = useState('map');
   const [slotId, setSlotId] = useState(null);
   const [preview, setPreview] = useState(false);
-  const { width: courtWidth, length: courtLength, gap } = club.courtMap;
-  const mapWidth = courtWidth * 3 + gap * 2;
-  const mapHeight = courtLength + (courtWidth + gap) * 2;
   const court = courts.find((item) => item.id === courtId);
   const day = days.find((item) => item.id === dayId);
   const slots = getDemoSlots(availability, dayId, courtId);
@@ -43,26 +29,7 @@ export function CourtSelector({ club, courts, days, availability }) {
         <div className="selector-body">
           <div className="court-map-panel">
             <div className="map-topline"><span className="map-label">THE GROUNDS / 01</span></div>
-            <div className={view === 'map' ? 'court-map' : 'court-list'} role="group" aria-label="Select a demo court" style={{ '--map-width': mapWidth, '--map-height': mapHeight }}>
-              {courts.map((item) => {
-                const status = getCourtStatus(getDemoSlots(availability, dayId, item.id));
-                const selected = item.id === courtId;
-                const landscape = item.orientation === 'landscape';
-                const geometry = {
-                  '--court-x': landscape ? mapWidth - courtLength + 1 : (item.column - 1) * (courtWidth + gap) + 1,
-                  '--court-y': landscape ? courtLength + gap + (item.row - 2) * (courtWidth + gap) + 1 : 1,
-                  '--court-width': landscape ? courtLength : courtWidth,
-                  '--court-height': landscape ? courtWidth : courtLength,
-                };
-                return <button key={item.id} className={`court-tile ${item.orientation} ${status} ${selected ? 'selected' : ''}`} style={geometry} aria-label={`Court ${item.number}, ${statusLabels[status]}`} aria-pressed={selected} onClick={() => chooseCourt(item.id)}>
-                  <CourtMarkings landscape={landscape} width={courtWidth} length={courtLength} />
-                  <span className="court-tile-label"><span className="court-name">COURT</span> <strong>{String(item.number).padStart(2, '0')}</strong></span>
-                  <span className="court-status"><span aria-hidden="true" />{statusLabels[status]}</span>
-                  {selected && <span className="court-check" aria-hidden="true"><Check size={13} /></span>}
-                </button>;
-              })}
-              {view === 'map' && <div className="map-annotation" aria-hidden="true"><span className="map-cross">+</span><strong>A LITTLE FRIENDLY<br />COMPETITION.</strong><span>A WHOLE LOT OF GOOD TIMES.</span><div className="path-lines" /></div>}
-            </div>
+            <CourtMap club={club} courts={courts} selectedCourtId={courtId} onSelect={chooseCourt} view={view} getStatus={(item) => getCourtStatus(getDemoSlots(availability, dayId, item.id))} />
             <div className="map-legend"><span><i className="legend-dot available" />Available</span><span><i className="legend-dot reserved" />Reserved</span><span><i className="legend-dot open-play" />Open play</span></div>
             <p className="map-footnote">Illustrative layout · Select any court to explore sample sessions.</p>
           </div>
@@ -78,6 +45,7 @@ export function CourtSelector({ club, courts, days, availability }) {
             <div className="selection-message" role="status" aria-live="polite">
               {preview && selectedSlot ? <div className="preview-result"><Check size={17} aria-hidden="true" /><div><strong>Court {court.number} · {selectedSlot.label} – {selectedSlot.endLabel}</strong><p>{day.longLabel}. Preview only. No court has been reserved.</p><button onClick={reset}><RotateCcw size={12} aria-hidden="true" /> Clear selection</button></div></div> : <p className="demo-explanation"><Info size={14} aria-hidden="true" /><span>{slots.every((slot) => slot.status !== 'available') ? 'No sample sessions available here. Try another court or demo day.' : 'A demo, not a reservation. No personal details or payments collected.'}</span></p>}
             </div>
+            <Link href="/book" className="text-link booking-entry">Try the booking demo <ArrowRight size={15} aria-hidden="true" /></Link>
             <div className="session-note"><Clock3 size={14} aria-hidden="true" /><span>Live availability and booking are coming in a later phase.</span></div>
           </div>
         </div>

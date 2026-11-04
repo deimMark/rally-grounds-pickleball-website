@@ -1,5 +1,9 @@
 # Proposed MVP architecture
 
+The independent [Phase 3D.1 interface prototype](PHASE-3D1.md) extends the approved
+owner-demo baseline with synthetic booking screens only. It does not integrate or
+approve unpublished booking/worker code; live architecture below remains planned.
+
 Phase 1 implementation follows the revised scope in [PHASE-1.md](PHASE-1.md):
 connection-only Supabase and synthetic presentation data. The live architecture described
 here remains planned, including all database and authorization safeguards.

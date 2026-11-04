@@ -3,20 +3,26 @@
 ## Project and current authorization
 
 Build a single-club pickleball booking and management application for Rally Grounds,
-San Juan, La Union, Philippines. The current branch `phase-1-1-visual-qa` is authorized
-for focused visual QA corrections from owner-demo commit
-1a9b04c262759ce62bf72573a86e3924c6809c48. See docs/PHASE-1.1.md and its QA report.
-Preserve the responsive design, five-court selector, synthetic data and mock-only public
-website/read-only dashboard. No Phase 2/3 backend code, customer collection or payments.
-Do not invent a logo; use supplied approved artwork only, otherwise retain text branding.
-Draft club address/phone and provisional hours must never appear owner-confirmed.
+San Juan, La Union, Philippines. Current authorization: Phase 3D.1 synthetic customer
+booking interface on local branch `phase-3d1-booking-interface`, based on approved
+owner-demo commit 6146af81c6cdf6a501260b39dbc9ebfe6d0a64af. The work was recovered from
+an unpublished earlier implementation as a verified patch (see docs/PHASE-3D1.md).
 
-The user now authorizes a court-orientation correction commit and push on this visual
-QA branch only, followed by its existing Git integration Preview. See
-docs/qa/phase-1.1/court-precision/REVIEW.md. The prior orientation correction failed
-visual review; use shared dimensions and Court 5 right-edge alignment, not its old tests. Do not merge, deploy production, change Vercel
-settings or begin Phase 3B. Keep owner-demo (the default branch) and Phase 2/3 branches
-unchanged. Capture requested screenshots and run appropriate checks before publication. Never commit credentials or real customer data.
+Authorized now: local QA corrections and one conditional local commit after lint, unit
+tests, browser tests, build and credential/bundle scans pass. Then stop for review.
+Not authorized: push or publication of any branch, merge, pull request, deployment,
+Vercel setting changes, changes to owner-demo, production Supabase, live bookings,
+GCash/payment processing, or Phase 3B.3 expiry-worker activation. GitHub publication
+requires separate explicit approval; never push a recovery or other non-excluded branch.
+
+Preserve the approved design, court geometry (Courts 3/4/5 portrait above, 2/1 landscape
+below, 5/2/1 right edges aligned), responsive homepage and read-only staff demo. Use
+synthetic profiles/availability only; no real customer collection, API mutation, payment
+or authenticated booking claims. Follow docs/PHASE-3D1.md; the documented Phase 3B
+DTO/privacy contracts are interface compatibility references only. Do not merge or
+depend on unpublished backend/worker code. Phase 3B security finding H2 remains an
+unresolved, separate backend blocker: do not remediate, import or activate backend code
+in this UI task. No credentials, customer data or private evidence in Git.
 
 ## Stack and boundaries
 
