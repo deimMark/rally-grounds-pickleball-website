@@ -1,0 +1,92 @@
+{
+  "capturedAt": "2026-11-04T06:39:21.799Z",
+  "branch": "phase-4a-receipt-demo",
+  "baseCommit": "af6ce955a0cf483c1b2acecadc6a9239d5a62f90",
+  "data": "synthetic fixtures and sample images only",
+  "records": [
+    {
+      "name": "01-payment-instructions-mobile-390",
+      "route": "/booking/payment-demo?day=2026-11-07&court=court-3&start=08%3A00&duration=120&players=4",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "02-gcash-selected-mobile-390",
+      "route": "/booking/payment-demo?day=2026-11-07&court=court-3&start=08%3A00&duration=120&players=4",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "03-bank-transfer-selected-mobile-390",
+      "route": "/booking/payment-demo?day=2026-11-07&court=court-3&start=08%3A00&duration=120&players=4",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "04-receipt-selected-preview-mobile-390",
+      "route": "/booking/payment-demo?day=2026-11-07&court=court-3&start=08%3A00&duration=120&players=4",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "05-receipt-validation-error-mobile-390",
+      "route": "/booking/payment-demo?day=2026-11-07&court=court-3&start=08%3A00&duration=120&players=4",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "06-pending-review-confirmation-mobile-390",
+      "route": "/booking/payment-demo?day=2026-11-07&court=court-3&start=08%3A00&duration=120&players=4",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "07-staff-receipt-queue-desktop",
+      "route": "/staff/payments-demo",
+      "width": 1440,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "08-staff-receipt-detail-mobile-390",
+      "route": "/staff/payments-demo",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "09-staff-rejected-scenario-mobile-390",
+      "route": "/staff/payments-demo",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "10-staff-verified-fictional-scenario-desktop",
+      "route": "/staff/payments-demo",
+      "width": 1440,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "11-payment-page-desktop",
+      "route": "/booking/payment-demo?day=2026-11-07&court=court-3&start=08%3A00&duration=120&players=4",
+      "width": 1440,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "12-expired-scenario-mobile-390",
+      "route": "/booking/payment-demo?day=2026-11-07&court=court-3&start=08%3A00&duration=120&players=4&scenario=expired",
+      "width": 390,
+      "violations": [],
+      "incompleteRules": []
+    }
+  ]
+}

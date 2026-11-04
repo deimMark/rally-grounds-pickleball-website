@@ -3,32 +3,47 @@
 ## Project and current authorization
 
 Build a single-club pickleball booking and management application for Rally Grounds,
-San Juan, La Union, Philippines. Current authorization: Phase 3D.2 booking UX and
-accessibility refinement on branch `phase-3d2-booking-ux`, created from the completed
-Phase 3D.1 commit 0172b32d24f3a4f1fddb5e3e66ffe7620eb93265 (branch
-`phase-3d1-booking-interface`, itself one commit on approved owner-demo
-6146af81c6cdf6a501260b39dbc9ebfe6d0a64af). See docs/PHASE-3D2.md for scope.
+San Juan, La Union, Philippines. Current authorization: Phase 4A synthetic payment
+receipt-image upload and staff review demonstration on branch `phase-4a-receipt-demo`,
+created from the completed Phase 3D.2 commit af6ce955a0cf483c1b2acecadc6a9239d5a62f90
+(branch `phase-3d2-booking-ux`, on Phase 3D.1 0172b32 and approved owner-demo 6146af8).
+See docs/PHASE-4A.md for scope.
 
-Authorized now: the approved Phase 3D.2 UX/accessibility improvements, their tests and
-documentation, and one conditional local commit after lint, the complete Vitest and
-Playwright suites, production build, credential and client-bundle scans pass on pinned
-Node 24. Then stop for review. Not authorized: push or publication of any branch, pull
-request, merge, deployment, Vercel project-setting changes, changes to owner-demo or
-phase-3d1-booking-interface, production Supabase, live reservations, real contact
-collection, GCash/payment processing, evidence uploads, guest capability cookies/tokens,
-backend migrations or Phase 3B.3 expiry-worker integration. GitHub publication requires
-separate explicit approval; never push a branch that vercel.json does not exclude.
+Authorized now: the approved Phase 4A customer payment-demo route, browser-only receipt
+image selection/validation/preview, synthetic staff receipt-review demonstration, their
+tests, screenshots and documentation, and one conditional local commit after lint, the
+complete Vitest and Playwright suites, production build, credential and client-bundle
+scans pass on pinned Node 24; then a verified Git bundle. Then stop for review.
+Not authorized: push or publication of any branch, pull request, merge, deployment,
+Vercel project-setting changes, changes to owner-demo or earlier phase branches,
+production Supabase, Supabase Storage writes, any server/API mutation, live reservations,
+real contact or bank/GCash account collection, live receipt uploads, payment gateways,
+GCash/bank APIs, webhooks, OCR or automated screenshot approval, real payment
+verification, ledger writes, guest capability cookies/tokens, browser persistence of
+receipt images, backend migrations or Phase 3B.3 expiry-worker integration.
+GitHub publication requires separate explicit approval; never push a branch that
+vercel.json does not exclude.
+
+Payment model (owner requirement): customers pay in the external GCash or banking app and
+submit a receipt image; staff independently check the club's actual account records; only
+then may an authorized staff member record a verified payment. Image submission, a
+displayed reference or a successful upload is never proof of funds. In Phase 4A every
+payment, receipt, reference, customer and outcome is synthetic; recipient details are
+labeled "DEMO ONLY — NO REAL TRANSFER" and no real account number, phone number, QR code
+or credential may appear anywhere. Keep booking status, customer payment claim, evidence
+review outcome and verified money received as separate concepts; pending or rejected
+evidence contributes zero verified revenue; evidence never extends a hold or revives an
+expired reservation. Keep the image size limit and accepted types in lib/demo config.
 
 Preserve the approved design, the shared CourtMap geometry (Courts 3/4/5 portrait above,
-2/1 landscape below, 5/2/1 right edges aligned), responsive homepage and read-only staff
-demo. Keep every demonstration price, operating hour, duration, player option and example
-policy in lib/demo; do not invent owner-approved business rules. Synthetic profiles and
-availability only; no API mutation, payment or authenticated booking claims. Do not make
-unavailable time slots keyboard tab stops; keep their status/reason accessible and prevent
-activation. Do not weaken existing tests or hide failures with retries. Follow
-docs/PHASE-3D1.md for the interface contracts (references only). Do not merge or depend on
-unpublished backend/worker code; Phase 3B security finding H2 remains an unresolved,
-separate backend blocker. No credentials, customer data or private evidence in Git.
+2/1 landscape below, 5/2/1 right edges aligned), responsive homepage, the Phase 3D.2
+booking flow and accessibility behaviour, and the read-only staff demo. Keep every
+demonstration price, operating hour, duration, player option and example policy in
+lib/demo; do not invent owner-approved business rules, deadlines, fees or refund terms.
+Do not weaken existing tests or hide failures with retries. Follow docs/PHASE-3D1.md for
+the interface contracts (references only). Do not merge or depend on unpublished
+backend/worker code; Phase 3B security finding H2 remains an unresolved, separate backend
+blocker. No credentials, customer data or private evidence in Git.
 
 ## Stack and boundaries
 

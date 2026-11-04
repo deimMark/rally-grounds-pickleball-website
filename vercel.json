@@ -1,4 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "git": { "deploymentEnabled": { "phase-3d1-booking-interface": false, "phase-3d2-booking-ux": false } }
+  "git": {
+    "deploymentEnabled": {
+      "phase-3d1-booking-interface": false,
+      "phase-3d2-booking-ux": false,
+      "phase-4a-receipt-demo": false
+    }
+  }
 }

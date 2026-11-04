@@ -454,3 +454,69 @@ select { border: 1px solid #bdc6d0; background: white; border-radius: 3px; color
  .booking-page:has(.booking-compact-summary) { padding-bottom: 120px; }
  html:has(.booking-compact-summary) { scroll-padding-bottom: 110px; }
 }
+
+/* Phase 4A: synthetic payment receipt demonstration (customer and staff). */
+.payment-heading { font-size: 24px; margin-bottom: 14px; }
+.payment-amount { font-family: var(--font-display); font-size: 26px; }
+.booking-state.neutral { background: #e9edf2; color: #3b4a60; }
+.booking-state.pending { background: #f5eddf; color: #77521e; }
+.booking-state.rejected { background: #f7e3e3; color: #8a1f1f; }
+.booking-state.verified { background: #e7f1ec; color: #2d624c; }
+.booking-state.expired { background: #e6e8eb; color: #475468; }
+.booking-page p.booking-state { display: inline-block; margin: 18px 0 6px; white-space: normal; line-height: 1.5; }
+.payment-methods { border: 0; padding: 0; margin: 24px 0 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.payment-methods legend { font-weight: 700; font-size: 16px; margin-bottom: 12px; }
+.payment-method { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: center; border: 1px solid #c8d2db; border-radius: 4px; padding: 14px; min-height: 64px; cursor: pointer; }
+.payment-method.chosen { border-color: var(--color-blue); background: #eaf1f8; box-shadow: inset 0 0 0 1px var(--color-blue); }
+.payment-method input { width: 20px; height: 20px; accent-color: var(--color-navy); grid-row: span 2; margin: 0; }
+.payment-method span { font-weight: 600; }
+.payment-method small { color: var(--muted); font-size: 12px; }
+.payment-method:focus-within { outline: 3px solid var(--color-blue); outline-offset: 3px; }
+.payment-instructions { margin: 18px 0 24px; padding: 18px; background: var(--surface-soft); border: 1px solid var(--border); border-radius: 4px; }
+.payment-instructions h3 { font-size: 17px; margin-bottom: 12px; }
+.payment-instructions ol { margin: 14px 0 0; padding-left: 20px; font-size: 14px; line-height: 1.8; }
+.payment-recipient { background: white; border: 1px dashed #b89a6a; border-radius: 4px; padding: 14px; display: grid; gap: 6px; }
+.payment-recipient strong { font-size: 15px; }
+.payment-recipient p { color: var(--muted); font-size: 13px; line-height: 1.7; }
+.payment-file-field { margin: 20px 0; padding: 16px; border: 1px solid var(--border); border-left: 4px solid transparent; border-radius: 4px; }
+.payment-file-field.invalid { border-left-color: #a32d2d; background: #fbf1f1; }
+.payment-file-field .field-label { margin-bottom: 8px; }
+.payment-file-field input[type=file] { display: block; width: 100%; margin-top: 12px; padding: 12px; min-height: 48px; border: 1px solid #9aa5b3; border-radius: 3px; background: white; font-size: 14px; }
+.payment-file-field input[type=file]::file-selector-button { font: inherit; font-weight: 600; min-height: 36px; padding: 6px 14px; margin-right: 12px; border: 1px solid var(--color-navy); border-radius: 3px; background: var(--color-navy); color: white; cursor: pointer; }
+.payment-empty { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 14px; margin: 8px 0 20px; }
+.payment-preview { margin: 8px 0 24px; border: 1px solid var(--border); border-radius: 4px; padding: 14px; background: white; }
+.payment-preview img { display: block; max-width: 100%; height: auto; max-height: 420px; margin: 0 auto; border: 1px solid var(--border); }
+.payment-preview figcaption { display: grid; gap: 4px; margin-top: 12px; font-size: 13px; color: var(--muted); line-height: 1.6; overflow-wrap: anywhere; }
+.payment-preview-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; align-items: center; }
+.button-outline { color: var(--color-navy); background: white; border-color: var(--color-navy); gap: 8px; padding-inline: 16px; }
+.button-outline:hover:not(:disabled) { background: var(--surface-soft); }
+.button-outline:disabled { opacity: .55; }
+.payment-submitted { background: var(--surface-soft); border: 1px solid var(--border); border-top: 4px solid var(--color-gold); border-radius: 4px; padding: 20px; margin: 20px 0; }
+.payment-submitted h3 { font-size: 18px; margin-bottom: 10px; }
+.payment-submitted p { font-size: 14px; line-height: 1.8; margin-bottom: 8px; }
+.payment-outcome { margin: 14px 0 20px; padding: 14px; background: white; border: 1px solid var(--border); border-radius: 4px; }
+.payment-outcome .booking-state { margin-bottom: 10px; }
+.payment-announcer:empty { display: none; }
+.payment-announcer { margin-top: 16px; font-size: 14px; line-height: 1.7; color: var(--color-navy); }
+.booking-summary select { margin: 8px 0 4px; }
+.payment-columns { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+.payment-warning { margin: 18px 0 0; }
+.payment-pill.neutral { background: #e9edf2; color: #3b4a60; }
+.payment-pill.rejected { background: #f7e3e3; color: #8a1f1f; }
+.payment-pill.verified { background: #e7f1ec; color: #2d624c; }
+.payment-pill.expired { background: #e6e8eb; color: #475468; }
+.payment-detail h2 { margin: 6px 0 12px; }
+.payment-detail-list { margin: 18px 0; }
+.payment-detail-list > div { font-size: 13px; }
+.staff-preview img { max-height: 360px; }
+.payment-simulation { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.payment-simulation h3 { font-size: 15px; margin-bottom: 6px; }
+.payment-footnote { margin: 20px 0 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.schedule-cards .button-outline { margin-top: 12px; }
+tbody td small { display: block; color: var(--muted); margin-top: 4px; }
+@media (max-width: 1020px) { .payment-columns { grid-template-columns: 1fr; } }
+@media (max-width: 760px) {
+ .payment-methods { grid-template-columns: 1fr; }
+ .payment-preview-actions .button { width: 100%; }
+ .payment-heading { font-size: 22px; }
+}
