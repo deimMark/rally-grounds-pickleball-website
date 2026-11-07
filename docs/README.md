@@ -1,6 +1,7 @@
-Current UI milestone: [Phase 4A synthetic payment receipt demonstration](PHASE-4A.md) with
-its [QA report](qa/phase-4a/REVIEW.md), on `phase-4a-receipt-demo` from the Phase 3D.2
-commit. Earlier: [Phase 3D.2](PHASE-3D2.md) ([QA](qa/phase-3d2/REVIEW.md)) and
+Current UI milestone: [Phase 5A synthetic staff operations dashboard](PHASE-5A.md) with its
+[QA report](qa/phase-5a/REVIEW.md), including open play with Reclub Meet links, on
+`phase-5a-staff-demo` from the Phase 4A commit. Earlier: [Phase 4A](PHASE-4A.md)
+([QA](qa/phase-4a/REVIEW.md)). Earlier: [Phase 3D.2](PHASE-3D2.md) ([QA](qa/phase-3d2/REVIEW.md)) and
 [Phase 3D.1](PHASE-3D1.md). Earlier visual review: [Phase 1.1](PHASE-1.1.md) and
 [QA screenshots](qa/phase-1.1/REVIEW.md), on its own branch from owner-demo.
 The original planning record below is retained for context.

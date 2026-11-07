@@ -4,7 +4,8 @@
     "deploymentEnabled": {
       "phase-3d1-booking-interface": false,
       "phase-3d2-booking-ux": false,
-      "phase-4a-receipt-demo": false
+      "phase-4a-receipt-demo": false,
+      "phase-5a-staff-demo": false
     }
   }
 }

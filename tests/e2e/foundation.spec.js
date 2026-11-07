@@ -87,8 +87,11 @@ test('open-play samples cannot be selected and court controls work with keyboard
 test('staff demo filters synthetic sessions without enabling operations', async ({ page }) => {
   await page.goto('/staff');
   await expect(page.getByText('No authentication or live operations', { exact: false })).toBeVisible();
-  await expect(page.getByText('₱1,200', { exact: true })).toBeVisible();
-  await expect(page.getByText('₱900', { exact: true })).toBeVisible();
+  // Phase 5A: /staff figures are now computed from the shared staff fixtures (lib/demo/staff*.js)
+  // instead of the Phase 1 hardcoded demoFinances, which implied a 50% partial refund rate and
+  // contradicted the Phase 4A receipt totals. Verified ₱8,400 − completed refunds ₱600 = net ₱7,800.
+  await expect(page.getByText('₱8,400', { exact: true })).toBeVisible();
+  await expect(page.getByText('₱7,800', { exact: true })).toBeVisible();
   await expect(page.locator('tbody tr')).toHaveCount(4);
   await page.getByLabel('Filter sample schedule').selectOption('review');
   await expect(page.locator('tbody tr')).toHaveCount(1);
@@ -129,7 +132,8 @@ for (const width of [320, 360, 390, 760]) {
     await expect(filter).toBeFocused();
     await filter.selectOption('review');
     await expect(cards.locator('li')).toHaveCount(1);
-    await expect(cards).toContainText('DEMO-002');
+    // Phase 5A: the pending-review row is fixture booking 302 (shared with the Phase 4A queue), not DEMO-002.
+    await expect(cards).toContainText('00000000-0000-4000-8000-000000000302');
     await expect(cards).toContainText('Pending review');
     await expect(page.getByRole('status')).toContainText('1 synthetic session');
     await filter.selectOption('all');
@@ -144,7 +148,7 @@ test('desktop schedule keeps all statuses and demo collection labels visible', a
   expect(await page.locator('.schedule-table-wrapper').evaluate((node) => node.scrollWidth <= node.clientWidth + 1)).toBe(true);
   for (const status of await page.locator('tbody .status-pill').all()) await expect(status).toBeVisible();
   const net = page.locator('.metric-card').filter({ hasText: 'Net collections' });
-  await expect(net).toContainText('₱900');
+  await expect(net).toContainText('₱7,800'); // Phase 5A: computed net (was hardcoded ₱900), see note above
   await expect(net).toContainText('DEMO FIGURE');
 });
 

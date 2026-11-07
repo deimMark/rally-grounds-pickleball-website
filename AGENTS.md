@@ -3,26 +3,36 @@
 ## Project and current authorization
 
 Build a single-club pickleball booking and management application for Rally Grounds,
-San Juan, La Union, Philippines. Current authorization: Phase 4A synthetic payment
-receipt-image upload and staff review demonstration on branch `phase-4a-receipt-demo`,
-created from the completed Phase 3D.2 commit af6ce955a0cf483c1b2acecadc6a9239d5a62f90
-(branch `phase-3d2-booking-ux`, on Phase 3D.1 0172b32 and approved owner-demo 6146af8).
-See docs/PHASE-4A.md for scope.
+San Juan, La Union, Philippines. Current authorization: Phase 5A synthetic staff
+scheduling and operations dashboard on branch `phase-5a-staff-demo`, created from the
+completed Phase 4A commit 563eb8b3893ed2b5a882c0f882562775502cff91 (branch
+`phase-4a-receipt-demo`, on Phase 3D.2 af6ce95, Phase 3D.1 0172b32 and approved owner-demo
+6146af8). See docs/PHASE-5A.md for scope.
 
-Authorized now: the approved Phase 4A customer payment-demo route, browser-only receipt
-image selection/validation/preview, synthetic staff receipt-review demonstration, their
-tests, screenshots and documentation, and one conditional local commit after lint, the
-complete Vitest and Playwright suites, production build, credential and client-bundle
-scans pass on pinned Node 24; then a verified Git bundle. Then stop for review.
+Authorized now: the approved Phase 5A staff pages (overview, daily/weekly schedule,
+bookings, open play, maintenance, customers, cancellation/rescheduling requests and the
+existing receipt review), centralised synthetic fixtures and pure helpers, in-memory
+simulations only, their tests, screenshots and documentation, and one conditional local
+commit after lint, the complete Vitest and Playwright suites, production build, credential
+and client-bundle scans pass on pinned Node 24; then a verified Git bundle. Then stop.
 Not authorized: push or publication of any branch, pull request, merge, deployment,
 Vercel project-setting changes, changes to owner-demo or earlier phase branches,
-production Supabase, Supabase Storage writes, any server/API mutation, live reservations,
-real contact or bank/GCash account collection, live receipt uploads, payment gateways,
-GCash/bank APIs, webhooks, OCR or automated screenshot approval, real payment
-verification, ledger writes, guest capability cookies/tokens, browser persistence of
-receipt images, backend migrations or Phase 3B.3 expiry-worker integration.
-GitHub publication requires separate explicit approval; never push a branch that
-vercel.json does not exclude.
+production Supabase, staff authentication or authorization claims, real customer records,
+live booking/open-play/maintenance mutations, actual cancellations, rescheduling or
+refunds, real receipt verification, payment ledger writes, any server/API mutation,
+customer communications, persistent simulated state (no cookies or browser storage),
+Supabase Storage writes, live receipt uploads, payment gateways, GCash/bank APIs,
+webhooks, OCR, guest capability cookies/tokens, backend migrations or Phase 3B.3
+expiry-worker integration. GitHub publication requires separate explicit approval; never
+push a branch that vercel.json does not exclude.
+
+Staff simulations: every simulated transition changes React state only, is labelled
+"SIMULATED ACTION — NO BOOKING CHANGED" and resets on reload. Client-side conflict
+warnings illustrate half-open occupancy rules; they are not database enforcement. Do not
+let a receipt alone confirm a booking, let evidence revive an expired hold, silently
+displace bookings, override occupancy conflicts, or create a payout from a refund approval.
+Keep original booking agreements immutable. Do not invent cancellation, rescheduling,
+deadline or refund policies or rates.
 
 Payment model (owner requirement): customers pay in the external GCash or banking app and
 submit a receipt image; staff independently check the club's actual account records; only

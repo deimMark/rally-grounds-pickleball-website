@@ -1,14 +1,31 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, CalendarDays, ShieldCheck, ReceiptText } from 'lucide-react';
+import { LayoutDashboard, CalendarDays, ClipboardList, Users, Wrench, UserRound, Inbox, ReceiptText, Menu, X } from 'lucide-react';
+
+export const staffLinks = [
+ { href: '/staff', label: 'Overview', icon: LayoutDashboard },
+ { href: '/staff/schedule', label: 'Schedule', icon: CalendarDays },
+ { href: '/staff/bookings', label: 'Bookings', icon: ClipboardList },
+ { href: '/staff/open-play', label: 'Open play', icon: Users },
+ { href: '/staff/maintenance', label: 'Maintenance', icon: Wrench },
+ { href: '/staff/customers', label: 'Customers', icon: UserRound },
+ { href: '/staff/requests', label: 'Requests', icon: Inbox },
+ { href: '/staff/payments-demo', label: 'Receipt review demo', icon: ReceiptText },
+];
+
+// Sidebar on wide screens; a disclosure menu on narrow screens.
 export function StaffNav() {
  const pathname = usePathname() || '/staff';
- const current = (href) => (pathname === href ? 'page' : undefined);
- return <nav aria-label="Dashboard navigation">
-  <Link href="/staff" aria-current={current('/staff')}><LayoutDashboard size={18} aria-hidden="true" />Overview</Link>
-  <Link href="/staff#schedule"><CalendarDays size={18} aria-hidden="true" />Sample schedule</Link>
-  <Link href="/staff/payments-demo" aria-current={current('/staff/payments-demo')}><ReceiptText size={18} aria-hidden="true" />Receipt review demo</Link>
-  <Link href="/staff#upcoming"><ShieldCheck size={18} aria-hidden="true" />Coming next</Link>
- </nav>;
+ const [open, setOpen] = useState(false);
+ const current = staffLinks.find((link) => link.href === pathname) ?? staffLinks[0];
+ return <>
+  <button type="button" className="staff-nav-toggle" aria-expanded={open} aria-controls="staff-navigation" onClick={() => setOpen(!open)}>
+   {open ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}<span>Staff menu</span><small>· {current.label}</small>
+  </button>
+  <nav id="staff-navigation" className="staff-nav" data-open={open} aria-label="Dashboard navigation">
+   {staffLinks.map(({ href, label, icon: Icon }) => <Link key={href} href={href} aria-current={pathname === href ? 'page' : undefined} onClick={() => setOpen(false)}><Icon size={18} aria-hidden="true" />{label}</Link>)}
+  </nav>
+ </>;
 }

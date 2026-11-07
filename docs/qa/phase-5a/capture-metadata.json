@@ -1,0 +1,203 @@
+{
+  "capturedAt": "2026-11-07T04:47:05.337Z",
+  "branch": "phase-5a-staff-demo",
+  "baseCommit": "563eb8b3893ed2b5a882c0f882562775502cff91",
+  "data": "synthetic staff fixtures (staff-demo-v1); test-only Reclub link in captures marked usesTestOnlyReclubLink, requests aborted",
+  "records": [
+    {
+      "name": "01-staff-overview-desktop",
+      "route": "/staff",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "02-staff-overview-mobile-390",
+      "route": "/staff",
+      "width": 390,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "03-daily-schedule-open-play-desktop",
+      "route": "/staff/schedule",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 18
+        }
+      ]
+    },
+    {
+      "name": "04-daily-schedule-mobile-390",
+      "route": "/staff/schedule",
+      "width": 390,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 8
+        }
+      ]
+    },
+    {
+      "name": "05-weekly-schedule-desktop",
+      "route": "/staff/schedule",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 16
+        }
+      ]
+    },
+    {
+      "name": "06-booking-list-desktop",
+      "route": "/staff/bookings",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "07-booking-details-desktop",
+      "route": "/staff/bookings?ref=00000000-0000-4000-8000-000000000302",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "08-open-play-management-desktop",
+      "route": "/staff/open-play",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "09-maintenance-closure-preview-desktop",
+      "route": "/staff/maintenance",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "10-occupancy-conflict-warning-desktop",
+      "route": "/staff/maintenance",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "11-customer-history-desktop",
+      "route": "/staff/customers",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "12-cancellation-request-desktop",
+      "route": "/staff/requests",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "13-rescheduling-request-conflict-desktop",
+      "route": "/staff/requests",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "14-receipt-review-integration-desktop",
+      "route": "/staff/payments-demo",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "15-keyboard-mobile-menu-390",
+      "route": "/staff/schedule",
+      "width": 390,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 8
+        }
+      ]
+    },
+    {
+      "name": "16-open-play-event-details-mobile-390",
+      "route": "/staff/schedule",
+      "width": 390,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 8
+        }
+      ]
+    },
+    {
+      "name": "17-reclub-link-pending-desktop",
+      "route": "/staff/schedule",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 18
+        }
+      ]
+    },
+    {
+      "name": "18-reclub-link-validation-desktop",
+      "route": "/staff/open-play",
+      "width": 1440,
+      "usesTestOnlyReclubLink": false,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "19-reclub-link-management-preview-desktop",
+      "route": "/staff/open-play",
+      "width": 1440,
+      "usesTestOnlyReclubLink": true,
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "20-reclub-link-enabled-schedule-desktop",
+      "route": "/staff/open-play",
+      "width": 1440,
+      "usesTestOnlyReclubLink": true,
+      "violations": [],
+      "incompleteRules": [
+        {
+          "id": "color-contrast",
+          "nodes": 23
+        }
+      ]
+    }
+  ]
+}
